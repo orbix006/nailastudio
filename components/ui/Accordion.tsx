@@ -14,17 +14,23 @@ interface AccordionItemProps {
 }
 
 export function AccordionItem({
+  id,
   title,
   children,
   isOpen,
   onToggle,
 }: AccordionItemProps) {
+  const buttonId = `accordion-btn-${id}`;
+  const panelId = `accordion-panel-${id}`;
+
   return (
     <div className="border-b border-gray-800/80 font-sans">
       <button
+        id={buttonId}
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between py-4 text-left font-semibold text-white hover:text-[#C9A86A] transition-colors focus:outline-none cursor-pointer"
+        aria-controls={panelId}
+        className="flex w-full items-center justify-between py-4 text-left font-semibold text-white hover:text-[#C9A86A] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-1 focus-visible:ring-offset-black rounded cursor-pointer"
       >
         <span className="text-base tracking-wide">{title}</span>
         <motion.span
@@ -39,6 +45,9 @@ export function AccordionItem({
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
+            id={panelId}
+            role="region"
+            aria-labelledby={buttonId}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}

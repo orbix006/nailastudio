@@ -24,18 +24,54 @@ export function Tabs({
   className,
   variant = 'underline',
 }: TabsProps) {
+  const tabRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
+    let nextIndex = index;
+    if (e.key === 'ArrowRight') {
+      nextIndex = (index + 1) % tabs.length;
+    } else if (e.key === 'ArrowLeft') {
+      nextIndex = (index - 1 + tabs.length) % tabs.length;
+    } else if (e.key === 'Home') {
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      nextIndex = tabs.length - 1;
+    } else {
+      return;
+    }
+
+    e.preventDefault();
+    const nextTab = tabs[nextIndex];
+    onChange(nextTab.id);
+    tabRefs.current[nextIndex]?.focus();
+  };
+
   return (
-    <div className={cn('flex space-x-1 border-b border-gray-800 p-1 font-sans', className)}>
-      {tabs.map((tab) => {
+    <div
+      role="tablist"
+      aria-label="Navigation tabs"
+      className={cn('flex space-x-1 border-b border-gray-800 p-1 font-sans', className)}
+    >
+      {tabs.map((tab, index) => {
         const isActive = tab.id === activeTabId;
         
         return (
           <button
             key={tab.id}
+            ref={(el) => {
+              tabRefs.current[index] = el;
+            }}
+            role="tab"
+            aria-selected={isActive}
+            aria-controls={`tabpanel-${tab.id}`}
+            id={`tab-${tab.id}`}
+            tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(tab.id)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
             className={cn(
               'relative px-4 py-2 text-sm font-semibold tracking-wide outline-none transition-colors duration-200 cursor-pointer select-none',
-              isActive ? 'text-[#C9A86A]' : 'text-gray-400 hover:text-white'
+              isActive ? 'text-[#C9A86A]' : 'text-gray-400 hover:text-white',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded'
             )}
           >
             {/* Display label */}

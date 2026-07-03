@@ -17,7 +17,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     };
 
     const hoverClass = hoverEffect
-      ? 'transition-all duration-300 hover:translate-y-[-4px] hover:border-[#C9A86A]/30 hover:shadow-[0_8px_30px_rgba(201,168,106,0.1)]'
+      ? 'transition-all duration-300 ease-out hover:translate-y-[-4px] hover:border-[#C9A86A]/35 hover:shadow-[0_12px_40px_rgba(201,168,106,0.12)]'
       : '';
 
     return (

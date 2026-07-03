@@ -20,7 +20,7 @@ type CombinedButtonProps = ButtonProps & Omit<HTMLMotionProps<'button'>, keyof B
 export const Button = React.forwardRef<HTMLButtonElement, CombinedButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, disabled, children, ...props }, ref) => {
     const baseStyles =
-      'inline-flex items-center justify-center rounded-md font-sans font-semibold tracking-wide transition-colors focus:outline-none focus:ring-2 focus:ring-[#C9A86A]/50 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
+      'inline-flex items-center justify-center rounded-md font-sans font-semibold tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111] disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
 
     const variants: Record<ButtonVariant, string> = {
       primary: 'bg-[#111111] text-white hover:bg-[#1e1e1e] border border-gray-800 dark:border-gray-800',

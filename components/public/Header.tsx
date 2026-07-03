@@ -2,9 +2,10 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, Sun, Moon, PhoneCall } from 'lucide-react';
-import { useTheme } from '@/components/ui/ThemeProvider';
+import { useTheme } from '@/hooks/use-theme';
 import { Drawer } from '@/components/ui/Drawer';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -60,8 +61,14 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
           {/* Logo / Branding */}
           <Link href="/" className="flex items-center space-x-2 select-none group">
             {logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={logoUrl} alt={companyName} className="h-9 w-auto object-contain" />
+              <Image
+                src={logoUrl}
+                alt={companyName}
+                width={180}
+                height={36}
+                priority
+                className="h-9 w-auto object-contain"
+              />
             ) : (
               <span className="font-serif text-2xl font-bold tracking-wide text-[#C9A86A] transition-colors group-hover:text-[#C9A86A]/80">
                 {companyName}
@@ -79,6 +86,7 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
                   href={link.href}
                   className={cn(
                     'text-sm font-semibold tracking-wide transition-colors duration-200 relative py-1 hover:text-[#C9A86A]',
+                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1.5 py-0.5',
                     isActive ? 'text-[#C9A86A]' : 'text-gray-400 dark:text-gray-400 text-gray-500'
                   )}
                 >
@@ -96,10 +104,10 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="rounded-full p-2 text-gray-400 hover:bg-gray-800/10 dark:hover:bg-gray-800 hover:text-[#C9A86A] transition-colors cursor-pointer"
+              className="rounded-full p-2 text-gray-400 hover:bg-gray-800/10 dark:hover:bg-gray-800 hover:text-[#C9A86A] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
               aria-label="Toggle theme mode"
             >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === 'dark' ? <Sun className="h-5 w-5" aria-hidden="true" /> : <Moon className="h-5 w-5" aria-hidden="true" />}
             </button>
 
             {/* Quick Consultation CTA Button (Desktop) */}
@@ -114,17 +122,18 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
                 window.dispatchEvent(event);
               }}
             >
-              <PhoneCall className="h-4 w-4" />
+              <PhoneCall className="h-4 w-4" aria-hidden="true" />
               <span>Book Consultation</span>
             </Button>
 
             {/* Mobile Hamburger Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden rounded-full p-2 text-gray-400 hover:bg-gray-800/10 dark:hover:bg-gray-800 hover:text-white transition-colors cursor-pointer"
+              aria-expanded={isMobileMenuOpen}
+              className="md:hidden rounded-full p-2 text-gray-400 hover:bg-gray-800/10 dark:hover:bg-gray-800 hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
               aria-label="Open navigation menu"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -146,6 +155,7 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
                 onClick={handleLinkClick}
                 className={cn(
                   'text-lg font-bold tracking-wide transition-colors py-2 border-b border-gray-800/30 hover:text-[#C9A86A]',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1',
                   isActive ? 'text-[#C9A86A]' : 'text-gray-400'
                 )}
               >

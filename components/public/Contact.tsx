@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { InquiryForm } from '@/components/public/InquiryForm';
@@ -16,40 +15,32 @@ interface ContactProps {
 }
 
 export function Contact({ phone, email, address, hours, projectTypes }: ContactProps) {
-  
-  const fadeIn = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring' as const, duration: 1.2, bounce: 0.1 },
-    },
-  };
-
   return (
-    <section id="contact" className="py-24 bg-[#141414] text-white font-sans overflow-hidden border-t border-[#C9A86A]/5">
+    <section
+      id="contact"
+      aria-labelledby="contact-heading"
+      className="py-24 bg-[#141414] text-white font-sans overflow-hidden border-t border-[#C9A86A]/5"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Title */}
-        <div className="text-center mb-16">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold">
+        <div className="text-center mb-16 animate-fade-in-up">
+          <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold" aria-hidden="true">
             Get In Touch
           </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
+          <h2
+            id="contact-heading"
+            className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2"
+          >
             Book Consultation
           </h2>
-          <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" />
+          <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" aria-hidden="true" />
         </div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          variants={fadeIn}
-          className="max-w-5xl mx-auto"
-        >
+        <div className="max-w-5xl mx-auto animate-fade-in-up">
           <Card className="bg-[#1A1A1A] border-[#C9A86A]/10 shadow-2xl overflow-hidden">
             <CardContent className="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+
               
               {/* Left Side: Contact Information & Hours (lg:col-span-5) */}
               <div className="lg:col-span-5 space-y-8 flex flex-col justify-between">
@@ -153,7 +144,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
 
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
       </div>
     </section>

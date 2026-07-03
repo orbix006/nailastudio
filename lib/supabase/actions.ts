@@ -79,11 +79,39 @@ export async function signInAction(formData: FormData) {
     device_label: 'Web Browser',
   });
 
+  // Record login in general audit_logs
+  await adminClient.from('audit_logs').insert({
+    admin_id: userId,
+    action: 'login',
+    table_name: 'admin_profiles',
+    record_id: userId,
+    metadata: {
+      email,
+      ip_address: ipAddress,
+      user_agent: userAgent,
+    },
+  });
+
   return { success: true };
 }
 
 export async function signOutAction() {
   const supabase = await createClient();
+  const adminClient = createAdminClient() as any;
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user) {
+    await adminClient.from('audit_logs').insert({
+      admin_id: user.id,
+      action: 'logout',
+      table_name: 'admin_profiles',
+      record_id: user.id,
+      metadata: {
+        email: user.email,
+      },
+    });
+  }
+
   await supabase.auth.signOut();
   redirect('/admin/login');
 }

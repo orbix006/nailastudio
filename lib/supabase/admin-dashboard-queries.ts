@@ -51,12 +51,20 @@ export async function getMonthlyStats(entityType: string, months: number = 12): 
       console.error('Error fetching monthly stats:', error);
       return [];
     }
+    interface PopularityRow {
+      entity_type: string | null;
+      entity_id: string | null;
+      event_count: number | string | null;
+      last_event_at: string;
+    }
+    
     // Aggregate counts by month
     const map = new Map<string, number>();
-    data.forEach((row: any) => {
+    (data as unknown as PopularityRow[]).forEach((row) => {
+      if (!row.last_event_at) return;
       const date = new Date(row.last_event_at);
       const period = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      map.set(period, (map.get(period) || 0) + Number(row.event_count));
+      map.set(period, (map.get(period) || 0) + Number(row.event_count || 0));
     });
     const result: MonthlyStat[] = [];
     Array.from(map.entries())

@@ -82,7 +82,7 @@ export function Footer({
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full p-2 bg-[#1A1A1A] hover:bg-[#8A7052]/20 hover:text-[#C9A86A] transition-all duration-300 text-gray-500"
+                  className="rounded-full p-2 bg-[#1A1A1A] hover:bg-[#8A7052]/20 hover:text-[#C9A86A] transition-all duration-300 text-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
                   aria-label={`Follow us on ${social.platform}`}
                 >
                   {socialIcons[social.platform]}
@@ -102,7 +102,7 @@ export function Footer({
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="hover:text-[#C9A86A] transition-colors duration-200"
+                  className="hover:text-[#C9A86A] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1"
                 >
                   {link.label}
                 </Link>
@@ -117,7 +117,7 @@ export function Footer({
             Business Hours
           </h3>
           <div className="flex items-start space-x-3 text-sm">
-            <Clock className="h-5 w-5 text-[#8A7052] flex-shrink-0 mt-0.5" />
+            <Clock className="h-5 w-5 text-[#8A7052] flex-shrink-0 mt-0.5" aria-hidden="true" />
             <span className="leading-relaxed whitespace-pre-line">{hours}</span>
           </div>
         </div>
@@ -130,19 +130,25 @@ export function Footer({
           <div className="space-y-4 text-sm">
             {address && (
               <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-[#8A7052] flex-shrink-0 mt-0.5" />
+                <MapPin className="h-5 w-5 text-[#8A7052] flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <span className="leading-relaxed">{address}</span>
               </div>
             )}
             <div className="flex items-center space-x-3">
-              <Phone className="h-5 w-5 text-[#8A7052] flex-shrink-0" />
-              <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-[#C9A86A] transition-colors">
+              <Phone className="h-5 w-5 text-[#8A7052] flex-shrink-0" aria-hidden="true" />
+              <a
+                href={`tel:${phone.replace(/\s+/g, '')}`}
+                className="hover:text-[#C9A86A] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1"
+              >
                 {phone}
               </a>
             </div>
             <div className="flex items-center space-x-3">
-              <Mail className="h-5 w-5 text-[#8A7052] flex-shrink-0" />
-              <a href={`mailto:${email}`} className="hover:text-[#C9A86A] transition-colors">
+              <Mail className="h-5 w-5 text-[#8A7052] flex-shrink-0" aria-hidden="true" />
+              <a
+                href={`mailto:${email}`}
+                className="hover:text-[#C9A86A] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1"
+              >
                 {email}
               </a>
             </div>

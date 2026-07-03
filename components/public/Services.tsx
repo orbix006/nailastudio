@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ArrowRight, Sparkles, Paintbrush, Layers } from 'lucide-react';
 import { Service } from '@/lib/supabase/queries';
@@ -71,18 +72,22 @@ export function Services({ services }: ServicesProps) {
   };
 
   return (
-    <section id="services" className="py-24 bg-[#141414] text-white font-sans overflow-hidden">
+    <section
+      id="services"
+      aria-labelledby="services-heading"
+      className="py-24 bg-[#141414] text-white font-sans overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Title */}
         <div className="text-center mb-16">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold">
+          <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold" aria-hidden="true">
             Bespoke Treatments
           </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
+          <h2 id="services-heading" className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
             Services & Artistry
           </h2>
-          <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" />
+          <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" aria-hidden="true" />
         </div>
 
         {/* Responsive Cards Grid */}
@@ -102,11 +107,12 @@ export function Services({ services }: ServicesProps) {
                 {/* Cover Image */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-gray-900 border-b border-[#C9A86A]/10">
                   {service.cover_image_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={service.cover_image_url}
                       alt={service.title}
-                      className="w-full h-full object-cover transform duration-700 group-hover:scale-105 origin-center"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transform duration-700 group-hover:scale-105 origin-center"
                     />
                   ) : (
                     <div className="w-full h-full bg-[#111111] flex items-center justify-center text-gray-700">
@@ -135,7 +141,7 @@ export function Services({ services }: ServicesProps) {
                   <ul className="space-y-2 text-xs text-gray-400">
                     {service.features.slice(0, 3).map((feat, idx) => (
                       <li key={idx} className="flex items-center space-x-2">
-                        <Check className="h-3 w-3 text-[#C9A86A] flex-shrink-0" />
+                        <Check className="h-3 w-3 text-[#C9A86A] flex-shrink-0" aria-hidden="true" />
                         <span>{feat}</span>
                       </li>
                     ))}
@@ -146,10 +152,11 @@ export function Services({ services }: ServicesProps) {
                   <Button
                     variant="ghost"
                     onClick={() => handleOpenDetails(service)}
-                    className="w-full text-left justify-between hover:text-[#C9A86A] hover:bg-transparent group/btn py-2 px-0 cursor-pointer"
+                    aria-label={`Discover ${service.title} details`}
+                    className="w-full text-left justify-between hover:text-[#C9A86A] hover:bg-transparent group/btn py-2 px-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1"
                   >
                     <span className="text-xs font-bold tracking-widest uppercase">Discover Service</span>
-                    <ArrowRight className="h-4 w-4 transform duration-300 group-hover/btn:translate-x-1.5 text-[#C9A86A]" />
+                    <ArrowRight className="h-4 w-4 transform duration-300 group-hover/btn:translate-x-1.5 text-[#C9A86A]" aria-hidden="true" />
                   </Button>
                 </CardFooter>
               </Card>
@@ -173,11 +180,12 @@ export function Services({ services }: ServicesProps) {
               {/* Left Column: Image Gallery Viewer */}
               <div className="flex flex-col space-y-4">
                 <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-[#C9A86A]/10 bg-gray-900 shadow-lg">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={activeImageMap[selectedService.id] || selectedService.cover_image_url || ''}
-                    alt={selectedService.title}
-                    className="w-full h-full object-cover transition-all duration-300"
+                    alt={`${selectedService.title} presentation`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition-all duration-300"
                   />
                 </div>
                 
@@ -193,18 +201,21 @@ export function Services({ services }: ServicesProps) {
                             [selectedService.id]: selectedService.cover_image_url!,
                           }))
                         }
+                        aria-label="View cover image"
                         className={cn(
                           'relative w-16 h-12 rounded overflow-hidden border cursor-pointer transition-all flex-shrink-0',
+                          'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-1 focus-visible:ring-offset-black',
                           activeImageMap[selectedService.id] === selectedService.cover_image_url
                             ? 'border-[#C9A86A] scale-95 ring-1 ring-[#C9A86A]'
                             : 'border-transparent opacity-60 hover:opacity-100'
                         )}
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                           src={selectedService.cover_image_url}
                           alt="Cover Thumbnail"
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="64px"
+                          className="object-cover"
                         />
                       </button>
                     )}
@@ -218,15 +229,16 @@ export function Services({ services }: ServicesProps) {
                             [selectedService.id]: url,
                           }))
                         }
+                        aria-label={`View gallery image ${idx + 1}`}
                         className={cn(
                           'relative w-16 h-12 rounded overflow-hidden border cursor-pointer transition-all flex-shrink-0',
+                          'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-1 focus-visible:ring-offset-black',
                           activeImageMap[selectedService.id] === url
                             ? 'border-[#C9A86A] scale-95 ring-1 ring-[#C9A86A]'
                             : 'border-transparent opacity-60 hover:opacity-100'
                         )}
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt={`Gallery Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                        <Image src={url} alt={`Gallery Thumbnail ${idx + 1}`} fill sizes="64px" className="object-cover" />
                       </button>
                     ))}
                   </div>

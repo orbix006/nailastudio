@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { motion } from 'framer-motion';
 import { DesignProcessStep } from '@/lib/supabase/queries';
 
@@ -13,46 +12,58 @@ export function DesignProcess({ steps }: DesignProcessProps) {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 },
+      transition: {
+        staggerChildren: 0.15,
+      },
     },
   };
 
-  const stepVariants = {
-    hidden: { opacity: 0, y: 30 },
+  const itemVariants = {
+    hidden: { opacity: 0, y: 25 },
     show: {
       opacity: 1,
       y: 0,
-      transition: { type: 'spring' as const, duration: 0.8 },
+      transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] as const },
     },
   };
 
   return (
-    <section id="process" className="py-24 bg-[#111111] text-white overflow-hidden font-sans border-t border-[#C9A86A]/5">
+    <section
+      id="process"
+      aria-labelledby="process-heading"
+      className="py-24 bg-[#111111] text-white overflow-hidden font-sans border-t border-[#C9A86A]/5"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Title */}
-        <div className="text-center mb-20">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
+          className="text-center mb-20"
+        >
+          <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold" aria-hidden="true">
             Methodology
           </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
+          <h2 id="process-heading" className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
             Our Design Process
           </h2>
-          <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" />
-        </div>
+          <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" aria-hidden="true" />
+        </motion.div>
 
         {/* Steps Grid */}
-        <motion.div
-          variants={containerVariants}
+        <motion.div 
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-100px' }}
+          variants={containerVariants}
           className="grid grid-cols-1 md:grid-cols-3 gap-12 relative"
         >
           {steps.map((step, idx) => (
             <motion.div
-              key={idx}
-              variants={stepVariants}
+              key={step.step_number ?? idx}
+              variants={itemVariants}
               className="flex flex-col items-center text-center space-y-4 group relative"
             >
               {/* Step Number Circle */}

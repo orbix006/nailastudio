@@ -12,6 +12,9 @@ export interface WebsiteSettings {
   google_maps_embed_url: string | null;
   logo_url: string | null;
   favicon_url: string | null;
+  seo_image_url: string | null;
+  google_analytics_id: string | null;
+  facebook_pixel_id: string | null;
 }
 
 export interface ThemeSettings {
@@ -37,6 +40,9 @@ const DEFAULT_WEBSITE_SETTINGS: WebsiteSettings = {
   google_maps_embed_url: null,
   logo_url: null,
   favicon_url: null,
+  seo_image_url: null,
+  google_analytics_id: null,
+  facebook_pixel_id: null,
 };
 
 const DEFAULT_THEME_SETTINGS: ThemeSettings = {
@@ -92,6 +98,19 @@ export async function getWebsiteSettings(): Promise<WebsiteSettings> {
       }
     }
 
+    let seoImageUrl: string | null = null;
+    // Fetch SEO public URL if set
+    if (settings.default_seo_image_id) {
+      const { data: seoMedia } = await supabase
+        .from('media_library')
+        .select('public_url')
+        .eq('id', settings.default_seo_image_id)
+        .maybeSingle();
+      if (seoMedia) {
+        seoImageUrl = seoMedia.public_url;
+      }
+    }
+
     return {
       company_name: settings.company_name,
       company_description: settings.company_description,
@@ -104,6 +123,9 @@ export async function getWebsiteSettings(): Promise<WebsiteSettings> {
       google_maps_embed_url: settings.google_maps_embed_url,
       logo_url: logoUrl,
       favicon_url: faviconUrl,
+      seo_image_url: seoImageUrl,
+      google_analytics_id: settings.google_analytics_id || null,
+      facebook_pixel_id: settings.facebook_pixel_id || null,
     };
   } catch (err) {
     console.error('Error fetching website settings from Supabase:', err);
@@ -405,85 +427,74 @@ export async function getServices(): Promise<Service[]> {
       .from('services')
       .select('*')
       .eq('is_visible', true)
+      .is('deleted_at', null)
       .order('display_order', { ascending: true });
 
     if (error || !services || services.length === 0) {
       return DEFAULT_SERVICES;
     }
 
-    const servicesList: Service[] = [];
+    // Batch-collect all media IDs needed across all services
+    const allMediaIds = new Set<string>();
+    services.forEach((s) => {
+      if (s.cover_image_id) allMediaIds.add(s.cover_image_id);
+      if (s.icon_media_id) allMediaIds.add(s.icon_media_id);
+    });
 
-    for (const service of services) {
-      let coverImageUrl: string | null = null;
-      let iconImageUrl: string | null = null;
+    // Fetch all service images pivot rows in one query
+    const { data: allServiceImages } = await supabase
+      .from('service_images')
+      .select('service_id, media_id, display_order')
+      .in('service_id', services.map((s) => s.id))
+      .order('display_order', { ascending: true });
 
-      // 1. Fetch cover image public URL
-      if (service.cover_image_id) {
-        const { data: coverMedia } = await supabase
-          .from('media_library')
-          .select('public_url')
-          .eq('id', service.cover_image_id)
-          .maybeSingle();
-        if (coverMedia) {
-          coverImageUrl = coverMedia.public_url;
-        }
-      }
+    (allServiceImages || []).forEach((si) => {
+      if (si.media_id) allMediaIds.add(si.media_id);
+    });
 
-      // 2. Fetch icon image public URL
-      if (service.icon_media_id) {
-        const { data: iconMedia } = await supabase
-          .from('media_library')
-          .select('public_url')
-          .eq('id', service.icon_media_id)
-          .maybeSingle();
-        if (iconMedia) {
-          iconImageUrl = iconMedia.public_url;
-        }
-      }
-
-      // 3. Fetch features list
-      const { data: features } = await supabase
-        .from('service_features')
-        .select('feature')
-        .eq('service_id', service.id)
-        .order('display_order', { ascending: true });
-      const featuresArray = features ? features.map((f) => f.feature) : [];
-
-      // 4. Fetch extra gallery images
-      const { data: serviceImages } = await supabase
-        .from('service_images')
-        .select('media_id')
-        .eq('service_id', service.id)
-        .order('display_order', { ascending: true });
-
-      const galleryUrls: string[] = [];
-      if (serviceImages && serviceImages.length > 0) {
-        const mediaIds = serviceImages.map((si) => si.media_id);
-        const { data: mediaItems } = await supabase
-          .from('media_library')
-          .select('public_url')
-          .in('id', mediaIds);
-        if (mediaItems) {
-          galleryUrls.push(...mediaItems.map((m) => m.public_url));
-        }
-      }
-
-      servicesList.push({
-        id: service.id,
-        title: service.title,
-        slug: service.slug,
-        short_description: service.short_description,
-        detailed_overview: service.detailed_overview,
-        design_approach: service.design_approach,
-        materials_finishes: service.materials_finishes,
-        cover_image_url: coverImageUrl,
-        icon_image_url: iconImageUrl,
-        features: featuresArray,
-        gallery_urls: galleryUrls,
-      });
+    // Single batched media lookup
+    const mediaMap = new Map<string, string>();
+    if (allMediaIds.size > 0) {
+      const { data: mediaItems } = await supabase
+        .from('media_library')
+        .select('id, public_url')
+        .in('id', Array.from(allMediaIds));
+      (mediaItems || []).forEach((m) => mediaMap.set(m.id, m.public_url));
     }
 
-    return servicesList;
+    // Fetch all service features in one query
+    const { data: allFeatures } = await supabase
+      .from('service_features')
+      .select('service_id, feature, display_order')
+      .in('service_id', services.map((s) => s.id))
+      .order('display_order', { ascending: true });
+
+    const featuresMap = new Map<string, string[]>();
+    (allFeatures || []).forEach((f) => {
+      if (!featuresMap.has(f.service_id)) featuresMap.set(f.service_id, []);
+      featuresMap.get(f.service_id)!.push(f.feature);
+    });
+
+    const serviceImagesMap = new Map<string, string[]>();
+    (allServiceImages || []).forEach((si) => {
+      if (!serviceImagesMap.has(si.service_id)) serviceImagesMap.set(si.service_id, []);
+      const url = mediaMap.get(si.media_id);
+      if (url) serviceImagesMap.get(si.service_id)!.push(url);
+    });
+
+    return services.map((service) => ({
+      id: service.id,
+      title: service.title,
+      slug: service.slug,
+      short_description: service.short_description,
+      detailed_overview: service.detailed_overview,
+      design_approach: service.design_approach,
+      materials_finishes: service.materials_finishes,
+      cover_image_url: service.cover_image_id ? (mediaMap.get(service.cover_image_id) ?? null) : null,
+      icon_image_url: service.icon_media_id ? (mediaMap.get(service.icon_media_id) ?? null) : null,
+      features: featuresMap.get(service.id) || [],
+      gallery_urls: serviceImagesMap.get(service.id) || [],
+    }));
   } catch (err) {
     console.error('Error fetching services from Supabase:', err);
     return DEFAULT_SERVICES;
@@ -594,61 +605,56 @@ export async function getPortfolioProjects(): Promise<PortfolioProject[]> {
       return DEFAULT_PROJECTS;
     }
 
-    const projectsList: PortfolioProject[] = [];
+    const projectIds = projects.map((p) => p.id);
 
-    for (const project of projects) {
-      let coverImageUrl = '';
+    // Batch collect all cover_image_ids
+    const allMediaIds = new Set<string>();
+    projects.forEach((p) => { if (p.cover_image_id) allMediaIds.add(p.cover_image_id); });
 
-      // 1. Fetch cover image
-      if (project.cover_image_id) {
-        const { data: coverMedia } = await supabase
-          .from('media_library')
-          .select('public_url')
-          .eq('id', project.cover_image_id)
-          .maybeSingle();
-        if (coverMedia) {
-          coverImageUrl = coverMedia.public_url;
-        }
-      }
+    // Batch-fetch all project images pivot rows
+    const { data: allProjectImages } = await supabase
+      .from('portfolio_project_images')
+      .select('project_id, media_id, display_order')
+      .in('project_id', projectIds)
+      .order('display_order', { ascending: true });
+    (allProjectImages || []).forEach((pi) => { if (pi.media_id) allMediaIds.add(pi.media_id); });
 
-      // 2. Fetch tags
-      const { data: projectTags } = await supabase
-        .from('portfolio_project_tags')
-        .select('project_tags(name)')
-        .eq('project_id', project.id);
-      
-      const tagsArray: string[] = [];
-      if (projectTags) {
-        projectTags.forEach((pt) => {
-          const t = pt.project_tags as unknown as { name: string } | null;
-          if (t && t.name) {
-            tagsArray.push(t.name);
-          }
-        });
-      }
+    // Batch-fetch all project tags pivot rows
+    const { data: allProjectTags } = await supabase
+      .from('portfolio_project_tags')
+      .select('project_id, project_tags(name)')
+      .in('project_id', projectIds);
 
-      // 3. Fetch gallery images
-      const { data: galleryImages } = await supabase
-        .from('portfolio_project_images')
-        .select('media_id')
-        .eq('project_id', project.id)
-        .order('display_order', { ascending: true });
-      
-      const galleryUrls: string[] = [];
-      if (galleryImages && galleryImages.length > 0) {
-        const mediaIds = galleryImages.map((gi) => gi.media_id);
-        const { data: mediaItems } = await supabase
-          .from('media_library')
-          .select('public_url')
-          .in('id', mediaIds);
-        if (mediaItems) {
-          galleryUrls.push(...mediaItems.map((m) => m.public_url));
-        }
-      }
+    // Single batched media lookup
+    const mediaMap = new Map<string, string>();
+    if (allMediaIds.size > 0) {
+      const { data: mediaItems } = await supabase
+        .from('media_library')
+        .select('id, public_url')
+        .in('id', Array.from(allMediaIds));
+      (mediaItems || []).forEach((m) => mediaMap.set(m.id, m.public_url));
+    }
 
+    // Build gallery maps
+    const galleryMap = new Map<string, string[]>();
+    (allProjectImages || []).forEach((pi) => {
+      if (!galleryMap.has(pi.project_id)) galleryMap.set(pi.project_id, []);
+      const url = mediaMap.get(pi.media_id);
+      if (url) galleryMap.get(pi.project_id)!.push(url);
+    });
+
+    // Build tags maps
+    const tagsMap = new Map<string, string[]>();
+    (allProjectTags || []).forEach((pt) => {
+      const pid = (pt as { project_id: string }).project_id;
+      if (!tagsMap.has(pid)) tagsMap.set(pid, []);
+      const t = pt.project_tags as unknown as { name: string } | null;
+      if (t?.name) tagsMap.get(pid)!.push(t.name);
+    });
+
+    return projects.map((project) => {
       const catInfo = project.portfolio_categories as unknown as { name: string; slug: string } | null;
-
-      projectsList.push({
+      return {
         id: project.id,
         category_id: project.category_id,
         category_name: catInfo?.name || '',
@@ -658,13 +664,11 @@ export async function getPortfolioProjects(): Promise<PortfolioProject[]> {
         description: project.description,
         location: project.location,
         completion_year: project.completion_year,
-        cover_image_url: coverImageUrl,
-        tags: tagsArray,
-        gallery_urls: galleryUrls,
-      });
-    }
-
-    return projectsList;
+        cover_image_url: project.cover_image_id ? (mediaMap.get(project.cover_image_id) ?? '') : '',
+        tags: tagsMap.get(project.id) || [],
+        gallery_urls: galleryMap.get(project.id) || [],
+      };
+    });
   } catch (err) {
     console.error('Error fetching portfolio projects from Supabase:', err);
     return DEFAULT_PROJECTS;
@@ -738,15 +742,20 @@ export async function getDesignProcess(): Promise<DesignProcessStep[]> {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
-      .from('design_process')
-      .select('step_number, title, description')
-      .order('step_number', { ascending: true });
+      .from('design_process_steps')
+      .select('display_order, title, description')
+      .eq('is_visible', true)
+      .order('display_order', { ascending: true });
 
     if (error || !data || data.length === 0) {
       return DEFAULT_DESIGN_PROCESS;
     }
 
-    return data;
+    return data.map((d) => ({
+      step_number: d.display_order || 1,
+      title: d.title,
+      description: d.description,
+    }));
   } catch (err) {
     console.error('Error fetching design process from Supabase:', err);
     return DEFAULT_DESIGN_PROCESS;
@@ -757,8 +766,9 @@ export async function getWhyChooseUs(): Promise<WhyChooseUsItem[]> {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
-      .from('why_choose_us')
+      .from('why_choose_features')
       .select('title, description, icon_name')
+      .eq('is_visible', true)
       .order('display_order', { ascending: true });
 
     if (error || !data || data.length === 0) {
@@ -778,6 +788,7 @@ export async function getCoreValues(): Promise<CoreValueItem[]> {
     const { data, error } = await supabase
       .from('core_values')
       .select('title, description, icon_name')
+      .eq('is_visible', true)
       .order('display_order', { ascending: true });
 
     if (error || !data || data.length === 0) {
@@ -821,7 +832,8 @@ export async function getTestimonials(): Promise<Testimonial[]> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from('testimonials')
-      .select('client_name, client_title, quote, rating')
+      .select('client_name, designation, review_text, rating')
+      .is('deleted_at', null)
       .eq('is_visible', true)
       .order('display_order', { ascending: true });
 
@@ -829,7 +841,12 @@ export async function getTestimonials(): Promise<Testimonial[]> {
       return DEFAULT_TESTIMONIALS;
     }
 
-    return data;
+    return data.map((t) => ({
+      client_name: t.client_name,
+      client_title: t.designation || 'Client',
+      quote: t.review_text,
+      rating: t.rating,
+    }));
   } catch (err) {
     console.error('Error fetching testimonials from Supabase:', err);
     return DEFAULT_TESTIMONIALS;
@@ -916,5 +933,28 @@ export async function getConsultationPopupSettings(): Promise<ConsultationPopupS
   } catch (err) {
     console.error('Error fetching popup settings from Supabase:', err);
     return DEFAULT_POPUP_SETTINGS;
+  }
+}
+
+/**
+ * Retrieve the current cache version number from site_cache_version table.
+ * Used for dynamic cache key rotation on CMS updates.
+ */
+export async function getSiteCacheVersion(): Promise<number> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from('site_cache_version')
+      .select('version')
+      .eq('id', true)
+      .maybeSingle();
+
+    if (error || !data) {
+      return 1;
+    }
+    return Number(data.version);
+  } catch (err) {
+    console.error('Error fetching cache version:', err);
+    return 1;
   }
 }

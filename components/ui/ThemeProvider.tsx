@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -10,26 +10,19 @@ type ThemeContextType = {
   setTheme: (theme: Theme) => void;
 };
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+export function ThemeProvider({ children, defaultTheme = 'dark' }: { children: React.ReactNode; defaultTheme?: Theme }) {
   const [theme, setThemeState] = useState<Theme>('dark'); // Dark mode by default
 
   useEffect(() => {
-    // Check local storage or system preference
+    // Check local storage or default db settings
     const savedTheme = localStorage.getItem('naila-theme') as Theme | null;
-    if (savedTheme) {
-      setThemeState(savedTheme);
-      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initialTheme: Theme = prefersDark ? 'dark' : 'light';
-      setThemeState(initialTheme);
-      document.documentElement.classList.toggle('dark', prefersDark);
-      document.documentElement.setAttribute('data-theme', initialTheme);
-    }
-  }, []);
+    const initialTheme = savedTheme || defaultTheme;
+    setThemeState(initialTheme);
+    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', initialTheme);
+  }, [defaultTheme]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
@@ -49,10 +42,3 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-}

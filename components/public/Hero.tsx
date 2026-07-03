@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { HeroSettings } from '@/lib/supabase/queries';
 import { Button } from '@/components/ui/Button';
@@ -95,13 +96,20 @@ export function Hero({ settings }: HeroProps) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <motion.img
+          <motion.div
             variants={kenBurnsVariants}
             animate="animate"
-            src={settings.background_image_url || '/images/hero_background.png'}
-            alt="The Nailaa Studio Salon Background"
-            className="w-full h-full object-cover origin-center"
-          />
+            className="relative w-full h-full"
+          >
+            <Image
+              src={settings.background_image_url || '/images/hero_background.png'}
+              alt="The Nailaa Studio Salon Background"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover origin-center"
+            />
+          </motion.div>
         )}
       </motion.div>
 
@@ -116,10 +124,12 @@ export function Hero({ settings }: HeroProps) {
         {/* Optional Studio Hero Logo */}
         {settings.logo_url && (
           <motion.div variants={itemVariants} className="mb-6 select-none">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={settings.logo_url}
               alt="The Nailaa Studio Logo"
+              width={200}
+              height={80}
+              priority
               className="h-20 w-auto object-contain mx-auto"
             />
           </motion.div>
@@ -174,7 +184,10 @@ export function Hero({ settings }: HeroProps) {
 
       {/* Pulsing Mouse Scroll Down Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center">
-        <motion.div
+        <motion.button
+          onClick={() => handleScrollTo('#services')}
+          aria-label="Scroll down to services section"
+          className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5 cursor-pointer opacity-75 hover:opacity-100 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
           animate={{
             y: [0, 8, 0],
           }}
@@ -183,8 +196,6 @@ export function Hero({ settings }: HeroProps) {
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5 cursor-pointer opacity-75 hover:opacity-100 transition-opacity"
-          onClick={() => handleScrollTo('#services')}
         >
           <motion.div
             animate={{
@@ -197,7 +208,7 @@ export function Hero({ settings }: HeroProps) {
             }}
             className="w-1.5 h-1.5 rounded-full bg-[#C9A86A]"
           />
-        </motion.div>
+        </motion.button>
         <span className="text-[10px] uppercase tracking-[0.25em] text-gray-500 mt-2 select-none pointer-events-none">
           Scroll Down
         </span>

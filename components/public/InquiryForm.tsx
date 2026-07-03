@@ -108,8 +108,13 @@ export function InquiryForm({
 
   if (success) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-4 font-sans text-white animate-fade-in">
-        <CheckCircle2 className="h-16 w-16 text-[#C9A86A] animate-pulse" />
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-4 font-sans text-white animate-fade-in"
+      >
+        <CheckCircle2 className="h-16 w-16 text-[#C9A86A]" aria-hidden="true" />
         <h3 className="font-serif text-2xl font-bold tracking-wide">Inquiry Submitted</h3>
         <p className="text-gray-400 text-sm max-w-sm leading-relaxed">
           Thank you for sharing your project details. Our design specialists will contact you shortly to schedule your consultation.
@@ -119,9 +124,19 @@ export function InquiryForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 text-left font-sans">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      aria-label="Project inquiry form"
+      className="space-y-5 text-left font-sans"
+    >
       {errorMsg && (
-        <div className="p-3 bg-red-950/40 border border-red-500/30 rounded text-red-400 text-xs sm:text-sm">
+        <div
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          className="p-3 bg-red-950/40 border border-red-500/30 rounded text-red-400 text-xs sm:text-sm"
+        >
           {errorMsg}
         </div>
       )}
@@ -130,9 +145,11 @@ export function InquiryForm({
       <Input
         label="Full Name"
         placeholder="Enter your name"
+        required
         error={errors.name?.message}
         {...register('name')}
         disabled={isSubmitting}
+        autoComplete="name"
       />
 
       {/* Row 2: Email & Phone Grid */}
@@ -141,16 +158,21 @@ export function InquiryForm({
           label="Email Address"
           type="email"
           placeholder="your@email.com"
+          required
           error={errors.email?.message}
           {...register('email')}
           disabled={isSubmitting}
+          autoComplete="email"
         />
         <Input
           label="Telephone"
+          type="tel"
           placeholder="+91 9999999999"
+          required
           error={errors.phone_number?.message}
           {...register('phone_number')}
           disabled={isSubmitting}
+          autoComplete="tel"
         />
       </div>
 
@@ -159,6 +181,7 @@ export function InquiryForm({
         <Select
           label="Project Category"
           placeholder="Select project category"
+          required
           options={selectOptions}
           error={errors.project_type_id?.message}
           {...register('project_type_id')}
@@ -178,6 +201,7 @@ export function InquiryForm({
       <Textarea
         label="Project Overview & Details"
         placeholder="Tell us about your space and requirements..."
+        required
         error={errors.message?.message}
         {...register('message')}
         disabled={isSubmitting}

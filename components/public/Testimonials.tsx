@@ -1,8 +1,7 @@
 'use client';
 
-import * as React from 'react';
-import { motion } from 'framer-motion';
 import { Quote, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Testimonial } from '@/lib/supabase/queries';
 import { Card, CardContent } from '@/components/ui/Card';
 
@@ -15,45 +14,61 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 },
+      transition: {
+        staggerChildren: 0.12,
+      },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 25 },
     show: {
       opacity: 1,
       y: 0,
-      transition: { type: 'spring' as const, duration: 0.8 },
+      transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] as const },
     },
   };
 
   return (
-    <section id="testimonials" className="py-24 bg-[#111111] text-white font-sans overflow-hidden border-t border-[#C9A86A]/5">
+    <section
+      id="testimonials"
+      aria-labelledby="testimonials-heading"
+      className="py-24 bg-[#111111] text-white font-sans overflow-hidden border-t border-[#C9A86A]/5"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Title */}
-        <div className="text-center mb-16">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
+          className="text-center mb-16"
+        >
+          <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold" aria-hidden="true">
             Testimonials
           </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
+          <h2 id="testimonials-heading" className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
             Client Experiences
           </h2>
-          <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" />
-        </div>
+          <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" aria-hidden="true" />
+        </motion.div>
 
         {/* Testimonials Grid */}
-        <motion.div
-          variants={containerVariants}
+        <motion.div 
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-100px' }}
+          variants={containerVariants}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {testimonials.map((test, idx) => (
-            <motion.div key={idx} variants={itemVariants} className="flex">
-              <Card className="flex flex-col w-full bg-[#1A1A1A] border-[#C9A86A]/10 hover:border-[#C9A86A]/20 transition-all duration-300 relative group p-6">
+            <motion.div
+              key={idx}
+              variants={itemVariants}
+              className="flex"
+            >
+              <Card hoverEffect className="flex flex-col w-full bg-[#1A1A1A] border-[#C9A86A]/10 hover:border-[#C9A86A]/20 transition-all duration-300 relative group p-6">
                 <CardContent className="p-0 flex flex-col h-full space-y-4">
                   {/* Quote Icon */}
                   <div className="text-[#C9A86A]/20 group-hover:text-[#C9A86A]/30 transition-colors duration-300">
