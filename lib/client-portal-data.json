@@ -1,0 +1,168 @@
+{
+  "clients": [
+    {
+      "id": "cli-1",
+      "email": "client@example.com",
+      "password": "clientpassword",
+      "name": "Ananya Sharma",
+      "phone": "+91 98765 43210"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-1",
+      "client_id": "cli-1",
+      "name": "Bespoke Bridal Salon Styling Package",
+      "status": "In Progress",
+      "start_date": "2026-06-10T09:00:00.000Z",
+      "completion_date": "2026-07-20T17:00:00.000Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "inv-101",
+      "client_id": "cli-1",
+      "amount": "₹15,000",
+      "status": "paid",
+      "invoice_date": "2026-06-10",
+      "due_date": "2026-06-15",
+      "download_url": "/documents/proposal.pdf"
+    },
+    {
+      "id": "inv-102",
+      "client_id": "cli-1",
+      "amount": "₹8,500",
+      "status": "pending",
+      "invoice_date": "2026-07-01",
+      "due_date": "2026-07-10",
+      "download_url": "/documents/proposal.pdf"
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc-1",
+      "client_id": "cli-1",
+      "name": "Bespoke Bridal Styling Proposal.pdf",
+      "type": "Proposal",
+      "url": "/documents/proposal.pdf",
+      "size": "2.4 MB"
+    },
+    {
+      "id": "doc-2",
+      "client_id": "cli-1",
+      "name": "Pre-Treatment Consultation Form.pdf",
+      "type": "Guide",
+      "url": "/documents/proposal.pdf",
+      "size": "850 KB"
+    }
+  ],
+  "progress": [
+    {
+      "id": "prog-1",
+      "client_id": "cli-1",
+      "phase_name": "Intake & Nail Health Assessment",
+      "status": "completed",
+      "updated_at": "2026-06-10T12:00:00.000Z"
+    },
+    {
+      "id": "prog-2",
+      "client_id": "cli-1",
+      "phase_name": "Custom Gel Formulation mixing",
+      "status": "completed",
+      "updated_at": "2026-06-15T15:30:00.000Z"
+    },
+    {
+      "id": "prog-3",
+      "client_id": "cli-1",
+      "phase_name": "Extension Sculpting Session",
+      "status": "in_progress",
+      "updated_at": "2026-07-02T10:00:00.000Z"
+    },
+    {
+      "id": "prog-4",
+      "client_id": "cli-1",
+      "phase_name": "Final Polish & Stone Placement Reveal",
+      "status": "pending",
+      "updated_at": "2026-07-04T17:26:00.000Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-1",
+      "client_id": "cli-1",
+      "sender": "admin",
+      "message": "Hello Ananya, we have completed the custom gel mixing phase. Your extension session is booked for next Tuesday. Please let us know if you have any questions.",
+      "timestamp": "2026-06-16T10:00:00.000Z"
+    },
+    {
+      "id": "msg-2",
+      "client_id": "cli-1",
+      "sender": "client",
+      "message": "Thank you! I would like to add gold foil accents during the final polish reveal. Can we add that to the schedule?",
+      "timestamp": "2026-06-16T14:30:00.000Z"
+    },
+    {
+      "id": "msg-3",
+      "client_id": "cli-1",
+      "sender": "admin",
+      "message": "Absolutely! We've updated your styling proposal details to include gold foil overlays.",
+      "timestamp": "2026-06-17T09:15:00.000Z"
+    }
+  ],
+  "meeting_notes": [
+    {
+      "id": "meet-1",
+      "client_id": "cli-1",
+      "title": "Initial Bridal Styling Intake Consultation",
+      "date": "2026-06-10",
+      "notes": "Discussed bridal theme, outfit colors, and hand wellness options. natural almond shape preferred, light champage base with soft gradients."
+    }
+  ],
+  "tracker_progress_percent": 75,
+  "stages": {
+    "design_status": "completed",
+    "design_notes": "Bespoke color palette profiling, almond shape mapping blueprint, and gold foil overlay sketches approved by Curation Lead.",
+    "construction_status": "in_progress",
+    "construction_notes": "Hypoallergenic gel base overlay sculpting andTip extension structure building are underway in the lab.",
+    "updated_at": "2026-07-03"
+  },
+  "checklist_tasks": [
+    { "id": "t-1", "name": "Nail Health & Cuticle Sculpting Assessment", "status": "completed" },
+    { "id": "t-2", "name": "Select Custom Gradient Color Swatches", "status": "completed" },
+    { "id": "t-3", "name": "Formulate Hypoallergenic Builder Gel Tint", "status": "completed" },
+    { "id": "t-4", "name": "Construct Tip Extensions Base blueprint", "status": "in_progress" },
+    { "id": "t-5", "name": "Apply 24k Gold Foil Shimmer Overlays", "status": "pending" },
+    { "id": "t-6", "name": "Hand-Place Crystals & Protective Top Coat", "status": "pending" }
+  ],
+  "timeline_milestones": [
+    {
+      "date": "2026-06-10",
+      "title": "Project Kickoff",
+      "notes": "Consultation intake complete, base skin tones undertones mapped."
+    },
+    {
+      "date": "2026-06-15",
+      "title": "Nail Design Blueprint Approved",
+      "notes": "Bridal champagne and gold shimmer sketches locked down."
+    },
+    {
+      "date": "2026-07-02",
+      "title": "Base Curing Session Complete",
+      "notes": "Healthy structure overlays applied and dried."
+    }
+  ],
+  "progress_images": [
+    {
+      "id": "img-1",
+      "title": "Phase 1: Shape Blueprinting",
+      "url": "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=500",
+      "date": "2026-06-11"
+    },
+    {
+      "id": "img-2",
+      "title": "Phase 2: Custom Gel Base Layering",
+      "url": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=500",
+      "date": "2026-06-24"
+    }
+  ]
+}

@@ -1,5 +1,8 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, Phone, MapPin, Clock, Instagram, Facebook, Linkedin, Youtube, MessageCircle } from 'lucide-react';
+
+import { FooterNewsletterForm } from './FooterNewsletterForm';
 
 export interface FooterSocialLink {
   platform: 'instagram' | 'facebook' | 'pinterest' | 'linkedin' | 'whatsapp' | 'youtube';
@@ -51,27 +54,31 @@ export function Footer({
     { href: '/', label: 'Home' },
     { href: '/services', label: 'Services' },
     { href: '/portfolio', label: 'Portfolio' },
-    { href: '/testimonials', label: 'Testimonials' },
     { href: '/contact', label: 'Contact' },
   ];
 
   return (
-    <footer className="bg-[#111111] text-gray-400 border-t border-[#C9A86A]/10 font-sans py-16 px-4 sm:px-6 lg:px-8">
+    <footer className="bg-stone-100 dark:bg-[#111111] text-stone-600 dark:text-gray-400 border-t border-stone-200 dark:border-[#C9A86A]/10 font-sans py-16 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
         {/* Column 1: Brand */}
         <div className="flex flex-col space-y-4">
           <Link href="/" className="flex items-center space-x-2 select-none">
             {logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={logoUrl} alt={companyName} className="h-10 w-auto object-contain" />
+              <Image
+                src={logoUrl}
+                alt={companyName}
+                width={180}
+                height={40}
+                className="h-10 w-auto object-contain"
+              />
             ) : (
               <span className="font-serif text-2xl font-bold tracking-wide text-[#C9A86A]">
                 {companyName}
               </span>
             )}
           </Link>
-          <p className="text-sm leading-relaxed text-gray-400">
-            {description || 'Luxury nail styling, artistic designs, and premium care. Handcrafted beauty made for you.'}
+          <p className="text-sm leading-relaxed text-stone-600 dark:text-gray-400">
+            {description || 'Bespoke architectural structures, refined spatial aesthetics, and premium curations. Timeless interior luxury crafted for you.'}
           </p>
           {/* Social Links */}
           {socials.length > 0 && (
@@ -82,7 +89,7 @@ export function Footer({
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full p-2 bg-[#1A1A1A] hover:bg-[#8A7052]/20 hover:text-[#C9A86A] transition-all duration-300 text-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
+                  className="rounded-full p-2 bg-white dark:bg-[#1A1A1A] border border-stone-200 dark:border-transparent hover:bg-[#8A7052]/20 hover:text-[#C9A86A] transition-all duration-300 text-stone-500 dark:text-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
                   aria-label={`Follow us on ${social.platform}`}
                 >
                   {socialIcons[social.platform]}
@@ -94,7 +101,7 @@ export function Footer({
 
         {/* Column 2: Navigation Links */}
         <div className="flex flex-col space-y-4">
-          <h3 className="font-serif text-lg font-semibold tracking-wider text-white">
+          <h3 className="font-serif text-lg font-semibold tracking-wider text-stone-900 dark:text-white">
             Quick Links
           </h3>
           <ul className="space-y-2 text-sm">
@@ -113,7 +120,7 @@ export function Footer({
 
         {/* Column 3: Business Hours */}
         <div className="flex flex-col space-y-4">
-          <h3 className="font-serif text-lg font-semibold tracking-wider text-white">
+          <h3 className="font-serif text-lg font-semibold tracking-wider text-stone-900 dark:text-white">
             Business Hours
           </h3>
           <div className="flex items-start space-x-3 text-sm">
@@ -124,7 +131,7 @@ export function Footer({
 
         {/* Column 4: Contact Info */}
         <div className="flex flex-col space-y-4">
-          <h3 className="font-serif text-lg font-semibold tracking-wider text-white">
+          <h3 className="font-serif text-lg font-semibold tracking-wider text-stone-900 dark:text-white">
             Contact Us
           </h3>
           <div className="space-y-4 text-sm">
@@ -156,8 +163,17 @@ export function Footer({
         </div>
       </div>
 
+      {/* Newsletter Subscribe Row */}
+      <div className="mx-auto max-w-7xl border-t border-stone-200 dark:border-gray-800/40 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="max-w-md space-y-1 text-center md:text-left">
+          <h4 className="font-serif text-sm font-semibold text-stone-900 dark:text-white uppercase tracking-wider">Newsletter Subscription</h4>
+          <p className="text-[10px] text-stone-500 dark:text-gray-500">Subscribe for double opt-in releases containing design guides and styling logs.</p>
+        </div>
+        <FooterNewsletterForm />
+      </div>
+
       {/* Copyright Bar */}
-      <div className="mx-auto max-w-7xl border-t border-gray-800/60 mt-12 pt-8 text-center text-xs text-gray-500">
+      <div className="mx-auto max-w-7xl border-t border-stone-200 dark:border-gray-800/60 mt-8 pt-8 text-center text-xs text-stone-500 dark:text-gray-500">
         <p>© {currentYear} {companyName}. All Rights Reserved. Crafted with care.</p>
       </div>
     </footer>

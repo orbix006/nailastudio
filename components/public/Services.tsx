@@ -75,14 +75,14 @@ export function Services({ services }: ServicesProps) {
     <section
       id="services"
       aria-labelledby="services-heading"
-      className="py-24 bg-[#141414] text-white font-sans overflow-hidden"
+      className="py-24 bg-white dark:bg-[#141414] text-stone-900 dark:text-white font-sans overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Title */}
         <div className="text-center mb-16">
           <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold" aria-hidden="true">
-            Bespoke Treatments
+            Design Services
           </span>
           <h2 id="services-heading" className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
             Services & Artistry
@@ -102,10 +102,10 @@ export function Services({ services }: ServicesProps) {
             <motion.div key={service.id} variants={cardVariants} className="flex">
               <Card
                 hoverEffect
-                className="flex flex-col w-full h-full group bg-[#1A1A1A] border-[#C9A86A]/10 hover:border-[#C9A86A]/30 transition-all duration-300"
+                className="flex flex-col w-full h-full group bg-gradient-to-b from-stone-50 to-stone-100 dark:from-[#1E1E1E] dark:to-[#161616] border-stone-200 dark:border-[#C9A86A]/10 hover:border-[#C9A86A]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_-10px_rgba(201,168,106,0.08)] hover:-translate-y-1 transition-all duration-500"
               >
                 {/* Cover Image */}
-                <div className="relative aspect-[16/10] overflow-hidden bg-gray-900 border-b border-[#C9A86A]/10">
+                <div className="relative aspect-[16/10] overflow-hidden bg-stone-100 dark:bg-gray-900 border-b border-stone-200 dark:border-[#C9A86A]/10">
                   {service.cover_image_url ? (
                     <Image
                       src={service.cover_image_url}
@@ -115,11 +115,11 @@ export function Services({ services }: ServicesProps) {
                       className="object-cover transform duration-700 group-hover:scale-105 origin-center"
                     />
                   ) : (
-                    <div className="w-full h-full bg-[#111111] flex items-center justify-center text-gray-700">
+                    <div className="w-full h-full bg-stone-150 dark:bg-[#111111] flex items-center justify-center text-stone-500 dark:text-gray-700">
                       Placeholder
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-100 dark:from-[#161616] via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity duration-500" />
                 </div>
 
                 <CardHeader className="pb-3 flex-grow">
@@ -128,10 +128,10 @@ export function Services({ services }: ServicesProps) {
                       LUXURY
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl sm:text-2xl font-serif text-white group-hover:text-[#C9A86A] transition-colors">
+                  <CardTitle className="text-xl sm:text-2xl font-serif text-stone-900 dark:text-white group-hover:text-[#C9A86A] transition-colors">
                     {service.title}
                   </CardTitle>
-                  <CardDescription className="text-gray-400 mt-2 text-sm line-clamp-3 leading-relaxed">
+                  <CardDescription className="text-stone-600 dark:text-gray-400 mt-2 text-sm line-clamp-3 leading-relaxed">
                     {service.short_description}
                   </CardDescription>
                 </CardHeader>
@@ -265,7 +265,7 @@ export function Services({ services }: ServicesProps) {
                     <div className="space-y-1">
                       <h5 className="text-[10px] uppercase tracking-[0.2em] text-[#8A7052] font-semibold flex items-center space-x-1">
                         <Paintbrush className="h-3 w-3" />
-                        <span>Artistry</span>
+                        <span>Approach</span>
                       </h5>
                       <p className="text-gray-400 text-xs leading-relaxed font-light">
                         {selectedService.design_approach}
@@ -276,7 +276,7 @@ export function Services({ services }: ServicesProps) {
                     <div className="space-y-1">
                       <h5 className="text-[10px] uppercase tracking-[0.2em] text-[#8A7052] font-semibold flex items-center space-x-1">
                         <Layers className="h-3 w-3" />
-                        <span>Wellness</span>
+                        <span>Materials</span>
                       </h5>
                       <p className="text-gray-400 text-xs leading-relaxed font-light">
                         {selectedService.materials_finishes}
@@ -289,7 +289,7 @@ export function Services({ services }: ServicesProps) {
                 {selectedService.features.length > 0 && (
                   <div className="border-t border-gray-800/40 pt-4">
                     <h4 className="text-[10px] uppercase tracking-[0.2em] text-[#C9A86A] font-semibold mb-2">
-                      Treatment Highlights
+                      Service Highlights
                     </h4>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-300">
                       {selectedService.features.map((feat, idx) => (

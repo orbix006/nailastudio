@@ -1,0 +1,52 @@
+{
+  "referralSettings": {
+    "isEnabled": true,
+    "rewardAmount": 500
+  },
+  "referrals": [
+    {
+      "id": "ref-1",
+      "referrerName": "Ananya Sharma",
+      "referrerEmail": "client@example.com",
+      "referralCode": "ANANYA502",
+      "refereeName": "Pooja Patel",
+      "refereeEmail": "pooja@example.com",
+      "status": "completed",
+      "rewardDisbursed": 500,
+      "date": "2026-06-25"
+    },
+    {
+      "id": "ref-2",
+      "referrerName": "Ananya Sharma",
+      "referrerEmail": "client@example.com",
+      "referralCode": "ANANYA502",
+      "refereeName": "Sneha Sen",
+      "refereeEmail": "sneha@example.com",
+      "status": "pending",
+      "rewardDisbursed": 0,
+      "date": "2026-07-02"
+    }
+  ],
+  "coupons": [
+    {
+      "id": "cpn-1",
+      "code": "BRIDAL20",
+      "type": "percent",
+      "value": 20,
+      "maxUses": 100,
+      "currentUses": 34,
+      "expiresAt": "2026-09-30",
+      "isActive": true
+    },
+    {
+      "id": "cpn-2",
+      "code": "WELCOME500",
+      "type": "fixed",
+      "value": 500,
+      "maxUses": 200,
+      "currentUses": 112,
+      "expiresAt": "2026-12-31",
+      "isActive": true
+    }
+  ]
+}

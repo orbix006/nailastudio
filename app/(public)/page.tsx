@@ -9,7 +9,6 @@ import {
   getCachedWhyChooseUs,
   getCachedCoreValues,
   getCachedDesignPhilosophy,
-  getCachedTestimonials,
   getCachedWebsiteSettings,
   getCachedProjectTypes,
   getCachedSiteCacheVersion,
@@ -22,8 +21,6 @@ import { Hero } from '@/components/public/Hero';
 import { About } from '@/components/public/About';
 import { DesignProcess } from '@/components/public/DesignProcess';
 import { BrandPhilosophy } from '@/components/public/BrandPhilosophy';
-import { Testimonials } from '@/components/public/Testimonials';
-import { Contact } from '@/components/public/Contact';
 
 // Dynamically import heavy interactive components to split their JS bundles
 const Services = nextDynamic(
@@ -33,6 +30,16 @@ const Services = nextDynamic(
 
 const Portfolio = nextDynamic(
   () => import('@/components/public/Portfolio').then((m) => ({ default: m.Portfolio })),
+  { loading: () => <div className="py-24 bg-[#111111]" /> }
+);
+
+const Contact = nextDynamic(
+  () => import('@/components/public/Contact').then((m) => ({ default: m.Contact })),
+  { loading: () => <div className="py-24 bg-[#111111]" /> }
+);
+
+const Faq = nextDynamic(
+  () => import('@/components/public/Faq').then((m) => ({ default: m.Faq })),
   { loading: () => <div className="py-24 bg-[#111111]" /> }
 );
 
@@ -58,9 +65,9 @@ export default async function Home() {
     whyChooseUs,
     coreValues,
     philosophy,
-    testimonials,
     settings,
     projectTypes,
+    seo,
   ] = await Promise.all([
     getCachedHeroSettings(version),
     getCachedAboutContent(version),
@@ -71,21 +78,27 @@ export default async function Home() {
     getCachedWhyChooseUs(version),
     getCachedCoreValues(version),
     getCachedDesignPhilosophy(version),
-    getCachedTestimonials(version),
     getCachedWebsiteSettings(version),
     getCachedProjectTypes(version),
+    getPageSeo('home'),
   ]);
 
   // JSON-LD Structured Data
   const localBusinessJsonLd = buildLocalBusinessJsonLd(settings);
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#111111] overflow-x-hidden">
+    <div className="flex flex-col w-full min-h-screen bg-stone-50 dark:bg-[#111111] overflow-x-hidden">
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: localBusinessJsonLd }}
       />
+      {seo.structured_data && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(seo.structured_data) }}
+        />
+      )}
       {/* 1. Hero Section */}
       <Hero settings={heroSettings} />
 
@@ -108,10 +121,10 @@ export default async function Home() {
       {/* 6. Selected Artistry Portfolio Showcase */}
       <Portfolio categories={categories} projects={projects} />
 
-      {/* 7. Client Reviews Grid */}
-      <Testimonials testimonials={testimonials} />
+      {/* FAQ Accordion Section */}
+      <Faq />
 
-      {/* 8. Contact & Timings Map */}
+      {/* 7. Contact & Timings Map */}
       <Contact
         phone={settings.contact_phone}
         email={settings.contact_email}

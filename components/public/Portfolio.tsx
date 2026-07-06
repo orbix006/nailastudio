@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Focus, ChevronLeft, ChevronRight, X, Calendar, MapPin } from 'lucide-react';
+import { Focus, ChevronLeft, ChevronRight, X, Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { PortfolioCategory, PortfolioProject } from '@/lib/supabase/queries';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -122,14 +123,14 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
     <section
       id="portfolio"
       aria-labelledby="portfolio-heading"
-      className="py-24 bg-[#111111] text-white font-sans overflow-hidden"
+      className="py-24 bg-stone-50 dark:bg-[#111111] text-stone-900 dark:text-white font-sans overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title */}
         <div className="text-center mb-16">
           <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold" aria-hidden="true">
-            Bespoke Styling Showcase
+            Bespoke Interior Curation
           </span>
           <h2 id="portfolio-heading" className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
             Selected Artistry
@@ -156,10 +157,10 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-2 focus-visible:ring-offset-black',
               activeCategory === 'all'
                 ? 'bg-[#C9A86A] text-[#111111]'
-                : 'border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                : 'border-stone-200 dark:border-white/10 text-stone-600 dark:text-gray-400 hover:text-stone-900 dark:hover:text-white hover:border-stone-300 dark:hover:border-white/20'
             )}
           >
-            All Art
+            All Projects
           </Button>
           {categories.map((cat) => (
             <Button
@@ -176,7 +177,7 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-2 focus-visible:ring-offset-black',
                 activeCategory === cat.slug
                   ? 'bg-[#C9A86A] text-[#111111]'
-                  : 'border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                  : 'border-stone-200 dark:border-white/10 text-stone-600 dark:text-gray-400 hover:text-stone-900 dark:hover:text-white hover:border-stone-300 dark:hover:border-white/20'
               )}
             >
               {cat.name}
@@ -203,7 +204,7 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.4 }}
                 aria-label={`View details of project ${project.name}`}
-                className="relative aspect-square rounded-lg overflow-hidden border border-white/5 bg-[#171717] group cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                className="relative aspect-square rounded-lg overflow-hidden border border-stone-200 dark:border-white/5 bg-stone-100 dark:bg-[#171717] group cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 onClick={() => handleOpenProject(project)}
               >
                 {/* Cover Image */}
@@ -261,7 +262,8 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#111111]/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 md:p-10"
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 bg-[#111111]/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 md:p-10"
           >
             {/* Close trigger button */}
             <button
@@ -273,7 +275,13 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
               <X className="h-6 w-6" aria-hidden="true" />
             </button>
 
-            <div className="relative w-full max-w-5xl flex flex-col items-center">
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="relative w-full max-w-5xl flex flex-col items-center"
+            >
               
               {/* Media viewer container */}
               <div className="relative w-full aspect-[4/3] max-h-[70vh] rounded-lg overflow-hidden bg-black flex items-center justify-center border border-white/5">
@@ -371,7 +379,18 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
                 </div>
               )}
 
-            </div>
+              {/* Case Study Link */}
+              <div className="w-full flex justify-center mt-6 pb-2">
+                <Link
+                  href={`/case-study/${selectedProject.slug}`}
+                  onClick={handleCloseProject}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#C9A86A] text-[#111111] text-xs font-bold uppercase tracking-wider hover:bg-[#C9A86A]/90 transition-all shadow-lg"
+                >
+                  View Full Case Study <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

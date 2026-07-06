@@ -53,7 +53,7 @@ export function BrandPhilosophy({ philosophy, whyChooseUs, coreValues }: BrandPh
   };
 
   return (
-    <section aria-label="Brand Philosophy and Core Values" className="py-24 bg-[#141414] text-white font-sans overflow-hidden border-t border-[#C9A86A]/5">
+    <section aria-label="Brand Philosophy and Core Values" className="py-24 bg-white dark:bg-[#141414] text-stone-900 dark:text-white font-sans overflow-hidden border-t border-stone-200 dark:border-[#C9A86A]/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
 
         {/* PART 1: Design Philosophy Quote & Description */}
@@ -69,7 +69,7 @@ export function BrandPhilosophy({ philosophy, whyChooseUs, coreValues }: BrandPh
             <span className="text-[10px] uppercase tracking-[0.3em] text-[#C9A86A] font-bold">
               Brand Statement
             </span>
-            <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl italic font-semibold leading-tight mt-3 text-gray-100">
+            <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl italic font-semibold leading-tight mt-3 text-stone-850 dark:text-gray-100">
               &ldquo;{philosophy.quote}&rdquo;
             </h3>
             {philosophy.author && (
@@ -84,14 +84,14 @@ export function BrandPhilosophy({ philosophy, whyChooseUs, coreValues }: BrandPh
             <h4 className="font-serif text-2xl font-bold text-[#C9A86A] tracking-wide">
               {philosophy.title}
             </h4>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-light">
+            <p className="text-stone-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed font-light">
               {philosophy.description}
             </p>
           </div>
         </motion.div>
 
         {/* PART 2: Why Choose Us & Core Values Double Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 pt-12 border-t border-gray-800/40">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 pt-12 border-t border-stone-200 dark:border-gray-800/40">
 
           {/* Column A: Why Choose Us */}
           <div className="space-y-8">
@@ -117,16 +117,16 @@ export function BrandPhilosophy({ philosophy, whyChooseUs, coreValues }: BrandPh
             >
               {whyChooseUs.map((item, idx) => (
                 <motion.div key={idx} variants={cardItemVariants}>
-                  <Card hoverEffect className="bg-[#1A1A1A] border-[#C9A86A]/5 hover:border-[#C9A86A]/20 transition-all duration-300">
+                  <Card hoverEffect className="bg-stone-50 dark:bg-[#1A1A1A] border-stone-200 dark:border-[#C9A86A]/5 hover:border-[#C9A86A]/20 transition-all duration-300">
                     <CardContent className="p-5 flex items-start space-x-4">
                       <div className="p-2 rounded-lg bg-[#C9A86A]/10 text-[#C9A86A] mt-1 flex-shrink-0">
                         <ResolveIcon name={item.icon_name} className="h-5 w-5" />
                       </div>
                       <div className="space-y-1">
-                        <h4 className="font-serif text-lg font-semibold text-white">
+                        <h4 className="font-serif text-lg font-semibold text-stone-900 dark:text-white">
                           {item.title}
                         </h4>
-                        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
+                        <p className="text-stone-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
                           {item.description}
                         </p>
                       </div>
@@ -161,16 +161,16 @@ export function BrandPhilosophy({ philosophy, whyChooseUs, coreValues }: BrandPh
             >
               {coreValues.map((item, idx) => (
                 <motion.div key={idx} variants={cardItemVariants}>
-                  <Card hoverEffect className="bg-[#1A1A1A] border-[#C9A86A]/5 hover:border-[#C9A86A]/20 transition-all duration-300">
+                  <Card hoverEffect className="bg-stone-50 dark:bg-[#1A1A1A] border-stone-200 dark:border-[#C9A86A]/5 hover:border-[#C9A86A]/20 transition-all duration-300">
                     <CardContent className="p-5 flex items-start space-x-4">
                       <div className="p-2 rounded-lg bg-[#C9A86A]/10 text-[#C9A86A] mt-1 flex-shrink-0">
                         <ResolveIcon name={item.icon_name} className="h-5 w-5" />
                       </div>
                       <div className="space-y-1">
-                        <h4 className="font-serif text-lg font-semibold text-white">
+                        <h4 className="font-serif text-lg font-semibold text-stone-900 dark:text-white">
                           {item.title}
                         </h4>
-                        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
+                        <p className="text-stone-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
                           {item.description}
                         </p>
                       </div>

@@ -71,7 +71,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     }));
 
-    return [...staticRoutes, ...projectRoutes, ...serviceRoutes];
+    // Fetch custom page routes configured in the SEO Manager
+    const { data: customPages } = await supabase
+      .from('seo_metadata')
+      .select('page_slug, updated_at');
+
+    const customRoutes: MetadataRoute.Sitemap = (customPages || [])
+      .filter((p) => {
+        const slug = p.page_slug.replace(/^\/+/, '');
+        return slug !== 'home' && slug !== '' && !slug.startsWith('services/') && !slug.startsWith('portfolio/');
+      })
+      .map((p) => {
+        const cleanSlug = p.page_slug.replace(/^\/+/, '');
+        return {
+          url: `${siteUrl}/${cleanSlug}`,
+          lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
+          changeFrequency: 'monthly' as const,
+          priority: 0.6,
+        };
+      });
+
+    return [...staticRoutes, ...projectRoutes, ...serviceRoutes, ...customRoutes];
   } catch {
     // Return static routes on DB failure
     return staticRoutes;

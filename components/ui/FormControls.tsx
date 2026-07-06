@@ -17,7 +17,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
       ref={ref}
       className={cn(
         'text-xs font-semibold font-sans tracking-wider uppercase select-none',
-        error ? 'text-red-400' : 'text-gray-400',
+        error ? 'text-red-400' : 'text-stone-500 dark:text-gray-400',
         className
       )}
       {...props}
@@ -62,14 +62,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           aria-invalid={!!error}
           aria-describedby={cn(errorId, helperId) || undefined}
           className={cn(
-            'w-full rounded-md border bg-[#111111] px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-all',
-            'focus:ring-2 focus:ring-offset-0 focus:ring-offset-transparent',
+            'w-full rounded-md border bg-white dark:bg-[#111111] px-4 py-2.5 text-sm text-stone-900 dark:text-white placeholder-stone-450 dark:placeholder-gray-600 outline-none transition-all',
+            'focus:ring-1 focus:ring-[#C9A86A] focus:shadow-[0_0_12px_rgba(201,168,106,0.15)]',
             'disabled:opacity-50 disabled:pointer-events-none',
             // Visible focus ring for keyboard users
-            'focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:outline-none',
+            'focus-visible:ring-1 focus-visible:ring-[#C9A86A] focus-visible:outline-none',
             error
               ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500'
-              : 'border-gray-800 focus:border-[#C9A86A] focus:ring-[#C9A86A]',
+              : 'border-stone-200 dark:border-gray-800 focus:border-[#C9A86A] focus:ring-[#C9A86A]',
             className
           )}
           {...props}
@@ -126,13 +126,13 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           aria-invalid={!!error}
           aria-describedby={cn(errorId, helperId) || undefined}
           className={cn(
-            'w-full rounded-md border bg-[#111111] px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none transition-all',
-            'focus:ring-2 focus:ring-offset-0',
-            'focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:outline-none',
+            'w-full rounded-md border bg-white dark:bg-[#111111] px-4 py-2.5 text-sm text-stone-900 dark:text-white placeholder-stone-450 dark:placeholder-gray-600 outline-none transition-all',
+            'focus:ring-1 focus:ring-[#C9A86A] focus:shadow-[0_0_12px_rgba(201,168,106,0.15)]',
+            'focus-visible:ring-1 focus-visible:ring-[#C9A86A] focus-visible:outline-none',
             'disabled:opacity-50 disabled:pointer-events-none resize-y',
             error
               ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500'
-              : 'border-gray-800 focus:border-[#C9A86A] focus:ring-[#C9A86A]',
+              : 'border-stone-200 dark:border-gray-800 focus:border-[#C9A86A] focus:ring-[#C9A86A]',
             className
           )}
           {...props}
@@ -190,20 +190,20 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           aria-invalid={!!error}
           aria-describedby={cn(errorId, helperId) || undefined}
           className={cn(
-            'w-full rounded-md border bg-[#111111] px-4 py-2.5 text-sm text-white outline-none transition-all',
+            'w-full rounded-md border bg-white dark:bg-[#111111] px-4 py-2.5 text-sm text-stone-900 dark:text-white outline-none transition-all',
             'focus:ring-2 focus:ring-offset-0',
             'focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:outline-none',
             'disabled:opacity-50 disabled:pointer-events-none appearance-none cursor-pointer',
             error
               ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500'
-              : 'border-gray-800 focus:border-[#C9A86A] focus:ring-[#C9A86A]',
+              : 'border-stone-200 dark:border-gray-800 focus:border-[#C9A86A] focus:ring-[#C9A86A]',
             className
           )}
           {...props}
         >
           {placeholder && <option value="" disabled>{placeholder}</option>}
           {options.map((opt) => (
-            <option key={opt.value} value={opt.value} className="bg-[#111111]">
+            <option key={opt.value} value={opt.value} className="bg-white dark:bg-[#111111] text-stone-900 dark:text-white">
               {opt.label}
             </option>
           ))}

@@ -42,6 +42,24 @@ export function FloatingControls({ whatsappUrl, phone }: FloatingControlsProps) 
     return null;
   }, [whatsappUrl, phone]);
 
+  const trackWhatsappClick = async () => {
+    try {
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      await supabase.from('analytics_events').insert({
+        event_type: 'button_click',
+        entity_type: 'button',
+        page_slug: window.location.pathname || '/',
+        metadata: {
+          action: 'whatsapp_chat',
+          whatsapp_url: finalWhatsappUrl,
+        },
+      });
+    } catch (err) {
+      console.error('Failed to log WhatsApp click event:', err);
+    }
+  };
+
   return (
     <div className="fixed bottom-6 right-6 z-40 flex flex-col items-center space-y-3 pointer-events-none select-none">
       
@@ -51,6 +69,7 @@ export function FloatingControls({ whatsappUrl, phone }: FloatingControlsProps) 
           href={finalWhatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={trackWhatsappClick}
           title="Chat with us on WhatsApp"
           aria-label="Chat with us on WhatsApp"
           className="pointer-events-auto w-12 h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 relative group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-black"

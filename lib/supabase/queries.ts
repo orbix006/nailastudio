@@ -1,4 +1,4 @@
-import { createClient } from './server';
+import { createPublicClient } from './server';
 
 export interface WebsiteSettings {
   company_name: string;
@@ -30,13 +30,13 @@ export interface ThemeSettings {
 
 const DEFAULT_WEBSITE_SETTINGS: WebsiteSettings = {
   company_name: 'The Nailaa Studio',
-  company_description: 'Luxury nail styling and care',
+  company_description: 'Bespoke interior architectures, spatial curation, and high-end residential interior designs by The Nailaa Studio.',
   contact_phone: '+91 99999 99999',
   contact_email: 'hello@thenailaastudio.com',
   business_hours_text: 'Monday – Saturday, 9:00 AM – 7:00 PM',
-  business_address: '123 Luxury Styling Rd, Mumbai, India',
+  business_address: '123 Atelier Boulevard, Colaba, Mumbai, India',
   whatsapp_number: '+919999999999',
-  whatsapp_default_message: "Hello, I'm interested in discussing my styling project with The Nailaa Studio.",
+  whatsapp_default_message: "Hello, I'm interested in discussing an interior design project with The Nailaa Studio.",
   google_maps_embed_url: null,
   logo_url: null,
   favicon_url: null,
@@ -58,7 +58,7 @@ const DEFAULT_THEME_SETTINGS: ThemeSettings = {
 
 export async function getWebsiteSettings(): Promise<WebsiteSettings> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     
     // Fetch website settings
     const { data: settings, error } = await supabase
@@ -135,7 +135,7 @@ export async function getWebsiteSettings(): Promise<WebsiteSettings> {
 
 export async function getThemeSettings(): Promise<ThemeSettings> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     
     const { data: theme, error } = await supabase
       .from('theme_settings')
@@ -170,7 +170,7 @@ export interface SocialLink {
 
 export async function getSocialLinks(): Promise<SocialLink[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('social_links')
       .select('platform, url')
@@ -202,21 +202,21 @@ export interface HeroSettings {
 }
 
 const DEFAULT_HERO_SETTINGS: HeroSettings = {
-  title: 'Quietly Confident Interiors.',
-  subtitle: 'Space is the breath of art. We design for the silence between objects.',
+  title: 'Designing Spaces That Inspire Everyday Living',
+  subtitle: 'At The Nailaa Studio, we create elegant interiors that blend functionality, comfort, and timeless aesthetics. From luxurious homes to inspiring commercial spaces, we transform ideas into beautiful realities.',
   background_type: 'image',
-  background_image_url: '/images/hero_background.png',
+  background_image_url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1920&q=80',
   background_video_url: null,
   logo_url: null,
-  cta1_text: 'Book Consultation',
+  cta1_text: 'Book a Consultation',
   cta1_target_section: 'contact',
-  cta2_text: 'View Portfolio',
+  cta2_text: 'Explore Our Portfolio',
   cta2_target_section: 'portfolio',
 };
 
 export async function getHeroSettings(): Promise<HeroSettings> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data: hero, error } = await supabase
       .from('hero_section')
       .select('*')
@@ -292,17 +292,17 @@ export interface AboutContent {
 }
 
 const DEFAULT_ABOUT_CONTENT: AboutContent = {
-  intro_text: 'Welcome to The Nailaa Studio, where luxury nail artistry meets modern sophistication. We believe your hands tell a story, and we are dedicated to making it beautiful through custom craftsmanship and premium care.',
-  vision_text: 'Our vision is to redefine the nail styling experience by combining high-end design aesthetics with structural integrity and clean, artistic expression. We strive to be the ultimate benchmark of contemporary grooming.',
-  mission_text: 'Our mission is to provide bespoke, hyper-individualized nail services using healthy, premium products and meticulous design approaches, delivering an unmatched experience in a serene, luxurious space.',
-  intro_image_url: '/images/about_intro.png',
-  vision_image_url: '/images/about_vision.png',
-  mission_image_url: '/images/about_mission.png',
+  intro_text: 'At The Nailaa Studio, we believe luxury interior design is a narrative of geometry, texture, and light. Sourcing high-grade natural stone, hand-selected finishes, and custom modular solutions, we curate private spaces that reflect personal stories. Our studio balances modern warmth with architectural restraint to create elegant sanctuaries.',
+  vision_text: 'Our vision is to shape inspiring environments that enhance everyday living. We value timeless refinement and spatial precision, planning details meticulously to bring balance, functional comfort, and aesthetic integrity to every luxury home or boutique commercial space.',
+  mission_text: 'Our mission is to lead a seamless, turnkey design journey. From our initial consultations and 2D zoning layouts to realistic 3D visualizations, sourcing, and on-site styling, we coordinate the entire execution to bring bespoke interiors to life without stress.',
+  intro_image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
+  vision_image_url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80',
+  mission_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
 };
 
 export async function getAboutContent(): Promise<AboutContent> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data: about, error } = await supabase
       .from('about_content')
       .select('*')
@@ -378,51 +378,182 @@ export interface Service {
   gallery_urls: string[];
 }
 
-const DEFAULT_SERVICES: Service[] = [
+export const DEFAULT_SERVICES: Service[] = [
   {
     id: 'service-1',
-    title: 'Bespoke Manicures',
-    slug: 'bespoke-manicures',
-    short_description: 'Precision shaping, clean cuticle care, and high-end polish selection.',
-    detailed_overview: 'Indulge in our signature manicure treatment designed for clean elegance and long-lasting nail health.',
-    design_approach: "We focus on the natural nail's structure and proportions, crafting custom shapes that flatters the hands.",
-    materials_finishes: 'Premium non-toxic base coats, rich organic pigments, and diamond shine gel topcoats.',
-    cover_image_url: '/images/about_intro.png',
+    title: 'Residential Interior Design',
+    slug: 'residential-interior-design',
+    short_description: 'Custom luxury architectural layouts and styling for high-end villas, penthouses, and private estates.',
+    detailed_overview: 'We craft hyper-personalized residential properties that reflect your lifestyle, combining architectural rigor with bespoke craftsmanship. From private libraries to grand master suites, each room is designed as an elegant sanctuary of quiet luxury.',
+    design_approach: 'Meticulous structural alignment, bespoke lighting design, and material balance to curate timeless living environments.',
+    materials_finishes: 'Premium natural stone, custom walnut paneling, hand-cast bronze hardware, and soft boucle textures.',
+    cover_image_url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80',
     icon_image_url: null,
-    features: ['Clean Cuticle Detailing', 'Precision File & Shape', 'Extended Nourishing Hand Massage'],
-    gallery_urls: ['/images/about_mission.png'],
+    features: [
+      'Tailored Spatial blue-printing mapping everyday rituals',
+      'Curated furniture and art commissions from global designers',
+      'Custom wall paneling and architectural lighting schemes'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80']
   },
   {
     id: 'service-2',
-    title: 'Artistic Overlay Extensions',
-    slug: 'artistic-overlay-extensions',
-    short_description: 'Custom nail extensions and artistic details using premium gel sculpture.',
-    detailed_overview: 'Enhance your length and strength with custom overlay sculpture, creating durable structures tailored for nail art.',
-    design_approach: 'Tailored geometric overlays that align with your natural finger vectors for a slender, elongated profile.',
-    materials_finishes: 'Hypoallergenic sculpting builder gels, gold leaf inclusions, and custom chrome dusts.',
-    cover_image_url: '/images/hero_background.png',
+    title: 'Commercial Interior Design',
+    slug: 'commercial-interior-design',
+    short_description: 'High-end branding integration, layout mapping, and design concepts for luxury hotels, restaurants, and retail spaces.',
+    detailed_overview: 'Elevate your brand presence with immersive, premium spaces that foster connection and engagement. We translate brand identity into physical structures, ensuring optimal utility and aesthetic excellence.',
+    design_approach: 'Dynamic traffic flow analysis, acoustic control, and seamless brand-aligned palette integration.',
+    materials_finishes: 'Fluted glass facades, matte black steel framing, micro-cement floor systems, and premium leather finishes.',
+    cover_image_url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
     icon_image_url: null,
-    features: ['Customized Tip Extension', 'Builder Gel Structure', 'Bespoke Nail Art Details'],
-    gallery_urls: ['/images/about_vision.png'],
+    features: [
+      'Interactive customer flow mapping and space zoning',
+      'Bespoke custom-milled reception and hospitality counters',
+      'Advanced acoustic treatments and lighting design integrations'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80']
   },
   {
     id: 'service-3',
-    title: 'Luxury Wellness Therapy',
-    slug: 'luxury-wellness-therapy',
-    short_description: 'Holistic hand skin care, thermal mask wraps, and nourishing massages.',
-    detailed_overview: 'A deep skin restoration experience for hands exposed to daily elements. Restores softness and youthfulness.',
-    design_approach: 'Soothing layout procedures, hot wraps, and rhythmic massages designed to stimulate blood flow and release tension.',
-    materials_finishes: 'Cold-pressed argan oils, volcanic mud thermal wraps, and organic lavender exfoliators.',
-    cover_image_url: '/images/about_mission.png',
+    title: 'Modular Kitchen Design',
+    slug: 'modular-kitchen-design',
+    short_description: 'Sleek, luxury kitchen architectures combining state-of-the-art appliances with seamless custom millwork.',
+    detailed_overview: 'The kitchen is the heart of the estate. We design modular kitchens that are both culinary workspaces and entertainment hubs, incorporating premium hardware, integrated appliances, and clean lines.',
+    design_approach: 'Ergonomic triangle optimization, concealed push-to-open detailing, and premium task lighting.',
+    materials_finishes: 'Calacatta marble countertops, matte lacquer cabinetry, anti-fingerprint surfaces, and brass detailing.',
+    cover_image_url: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80',
     icon_image_url: null,
-    features: ['Warm Volcanic Mud Wrap', 'Argan Cuticle Hydration', 'Aromatherapy Massage'],
-    gallery_urls: ['/images/about_intro.png'],
+    features: [
+      'Custom modular layout configurations built to specifications',
+      'Concealed soft-close storage systems and drawer inserts',
+      'Seamless smart kitchen appliance integration systems'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80']
   },
+  {
+    id: 'service-4',
+    title: 'Living Room Design',
+    slug: 'living-room-design',
+    short_description: 'Refined architectural gathering rooms showcasing custom marble hearths and bespoke lounge furniture configurations.',
+    detailed_overview: 'Make a premium statement. We design grand living spaces that showcase dramatic architectural elements, optimized seating arrangements, and detailed millwork built for hosting and relaxation.',
+    design_approach: 'Symmetry control, natural lighting prioritization, and curated material layering.',
+    materials_finishes: 'Travertine marble, walnut wood wraps, silk-blend area rugs, and brushed bronze metals.',
+    cover_image_url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'Bespoke focal walls with integrated marble hearths',
+      'Curated seating arrangements utilizing artisanal sofas and chairs',
+      'Custom coffered ceiling details and hidden speaker integration'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'service-5',
+    title: 'Bedroom Design',
+    slug: 'bedroom-design',
+    short_description: 'Serene, sophisticated retreats highlighting custom bedscapes, acoustic wraps, and ambient lighting layouts.',
+    detailed_overview: 'Create the ultimate private escape. We structure bedrooms as quiet luxury retreats using plush acoustic paneling, customized walk-in dressing rooms, and lighting calibrated for circadian comfort.',
+    design_approach: 'Soft geometric balancing, textured wall cladding, and indirect warm light zoning.',
+    materials_finishes: 'Imported linen drapery, textured plaster finishes, oak accents, and polished brass fixtures.',
+    cover_image_url: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'Tailored master suites with integrated walk-in wardrobe designs',
+      'Multi-tiered smart lighting presets for daytime and rest modes',
+      'Acoustic wall paneling and customized sound-dampening panels'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'service-6',
+    title: 'Office Interiors',
+    slug: 'office-interiors',
+    short_description: 'Sophisticated corporate layouts and private executive suites designed to improve productivity and collaboration.',
+    detailed_overview: 'Work in absolute refinement. We configure workspaces that balance productivity with corporate elegance, integrating premium office systems with comfortable lounge seating.',
+    design_approach: 'Ergonomic alignment, cable-free detailing, and balanced task-ambient illumination.',
+    materials_finishes: 'Walnut desks, leather task chairs, acoustic glass wall panels, and brushed aluminum frames.',
+    cover_image_url: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'Custom millwork desks with integrated wire-routing systems',
+      'Private acoustic call capsules and meeting room fit-outs',
+      'Circadian-supportive LED ambient lighting fixtures'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'service-7',
+    title: 'Space Planning',
+    slug: 'space-planning',
+    short_description: 'Expert spatial blueprints, furniture layouts, and movement path mapping to optimize every square foot.',
+    detailed_overview: 'A great space starts with a perfect layout. We draft precision architectural zoning layouts that maximize utility, view vectors, and movement paths before selecting any colors or furniture.',
+    design_approach: 'Scale analysis, dynamic movement simulations, and sight-line balancing.',
+    materials_finishes: 'Drafted architectural sheets, 2D vector layouts, and scaled material mood boards.',
+    cover_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'Multiple 2D scaled spatial layout options for review',
+      'Sight-line analysis mapping exterior and interior views',
+      'Zoning layouts ensuring proper flow and ergonomic clearance'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'service-8',
+    title: 'Turnkey Interior Solutions',
+    slug: 'turnkey-interior-solutions',
+    short_description: 'End-to-end design, construction management, material sourcing, and styling services for a stress-free handover.',
+    detailed_overview: 'A complete hassle-free luxury design experience. We manage everything—from licensing and material imports to builder supervision and site styling—handing over your keys when your home is fully completed.',
+    design_approach: 'Unified project management, strict schedule control, and detail supervision.',
+    materials_finishes: 'Comprehensive architectural fit-outs, imported custom accents, and fully styled installations.',
+    cover_image_url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'Comprehensive project management and vendor coordination',
+      'Rigorous material quality check and factory inspection',
+      'Final styling down to curated bookshelf art and accent florals'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'service-9',
+    title: 'Furniture & Decor Styling',
+    slug: 'furniture-decor-styling',
+    short_description: 'Curating custom furniture configurations, artisanal ornaments, rugs, and decorative details.',
+    detailed_overview: 'The final layer of luxury. We handpick bespoke furniture from international studios, style bookshelves, position lighting arrays, and align textiles to bring elegant unity to your architecture.',
+    design_approach: 'Color balancing, proportion scale mapping, and custom craftsmanship sourcing.',
+    materials_finishes: 'Boucle fabrics, premium brushed brass details, curated designer ceramics, and silk wool carpets.',
+    cover_image_url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'Curated furniture procurement lists and manufacturer coordination',
+      'Art advisory, collection sourcing, and framing guidelines',
+      'Detailed site styling for tables, shelving, and soft layouts'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'service-10',
+    title: '3D Design Visualization',
+    slug: '3d-design-visualization',
+    short_description: 'Photorealistic 3D visual renderings and virtual walkthroughs of your planned space.',
+    detailed_overview: 'See your dream space before a single brick is laid. We create high-fidelity, photorealistic 3D renders with exact material textures, lighting states, and furniture layouts for complete clarity.',
+    design_approach: 'Accurate architectural scale rendering, light bounce calculations, and detail texturing.',
+    materials_finishes: 'High-resolution digital renders, VR panoramic exports, and video walkthrough animations.',
+    cover_image_url: 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'High-resolution multi-angle 3D interior renders',
+      'Virtual reality walkthrough files for immersive reviews',
+      'Accurate lighting simulation matching dawn, noon, and night'
+    ],
+    gallery_urls: ['https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80']
+  }
 ];
 
 export async function getServices(): Promise<Service[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data: services, error } = await supabase
       .from('services')
       .select('*')
@@ -523,59 +654,129 @@ export interface PortfolioProject {
 }
 
 const DEFAULT_CATEGORIES: PortfolioCategory[] = [
-  { id: 'cat-1', name: 'Manicures', slug: 'manicures' },
-  { id: 'cat-2', name: 'Artistic Extensions', slug: 'artistic-extensions' },
-  { id: 'cat-3', name: 'Hand Wellness', slug: 'hand-wellness' },
+  { id: 'cat-1', name: 'Residential Estates', slug: 'residential' },
+  { id: 'cat-2', name: 'Commercial Spaces', slug: 'commercial' },
+  { id: 'cat-3', name: 'Turnkey Solutions', slug: 'turnkey' },
 ];
 
-const DEFAULT_PROJECTS: PortfolioProject[] = [
+export const DEFAULT_PROJECTS: PortfolioProject[] = [
   {
     id: 'proj-1',
     category_id: 'cat-1',
-    category_name: 'Manicures',
-    category_slug: 'manicures',
-    name: 'Chic Chrome Tips',
-    slug: 'chic-chrome-tips',
-    description: 'A sleek, contemporary chrome manicure reflecting high-contrast champagne gold shadows.',
-    location: 'Mumbai Studio',
-    completion_year: 2026,
-    cover_image_url: '/images/about_intro.png',
-    tags: ['Chrome', 'Minimalist', 'Artistry'],
-    gallery_urls: ['/images/about_mission.png'],
+    category_name: 'Residential Estates',
+    category_slug: 'residential',
+    name: 'Luxury Villa Interior',
+    slug: 'luxury-villa-interior',
+    description: 'An architectural private villa featuring custom travertine marble hearths, solid walnut wood paneling, and brushed brass details.',
+    location: 'Worli, Mumbai',
+    completion_year: 2025,
+    cover_image_url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
+    tags: ['Luxury', 'Villa', 'Modern Classic'],
+    gallery_urls: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80']
   },
   {
     id: 'proj-2',
-    category_id: 'cat-2',
-    category_name: 'Artistic Extensions',
-    category_slug: 'artistic-extensions',
-    name: 'Golden Sculpted Overlays',
-    slug: 'golden-sculpted-overlays',
-    description: 'Bespoke builder gel sculpture integrated with gold leaf overlays and hand-painted lines.',
-    location: 'Bandra Studio',
-    completion_year: 2026,
-    cover_image_url: '/images/hero_background.png',
-    tags: ['Gel Extensions', 'Gold Leaf', 'Sculpture'],
-    gallery_urls: ['/images/about_vision.png'],
+    category_id: 'cat-1',
+    category_name: 'Residential Estates',
+    category_slug: 'residential',
+    name: 'Modern Apartment',
+    slug: 'modern-apartment',
+    description: 'A premium apartment layout utilizing space optimization, custom storage, fluted glass screens, and designer Italian light fixtures.',
+    location: 'Bandra, Mumbai',
+    completion_year: 2025,
+    cover_image_url: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80',
+    tags: ['Apartment', 'Modern', 'Sleek'],
+    gallery_urls: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80']
   },
   {
     id: 'proj-3',
-    category_id: 'cat-3',
-    category_name: 'Hand Wellness',
-    category_slug: 'hand-wellness',
-    name: 'Hydrating Mud Spa',
-    slug: 'hydrating-mud-spa',
-    description: 'A complete hand wellness treatment wrap combining volcanic mud masks and cuticle repair massage oils.',
-    location: 'Mumbai Studio',
+    category_id: 'cat-1',
+    category_name: 'Residential Estates',
+    category_slug: 'residential',
+    name: 'Scandinavian Living Room',
+    slug: 'scandinavian-living-room',
+    description: 'A cozy, light-filled gathering room prioritizing neutral boucle fabrics, light oak floors, raw plaster textures, and warm fireplaces.',
+    location: 'Alibaug, Maharashtra',
     completion_year: 2026,
-    cover_image_url: '/images/about_mission.png',
-    tags: ['Treatment', 'Spa', 'Nourishing'],
-    gallery_urls: ['/images/about_intro.png'],
+    cover_image_url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
+    tags: ['Scandinavian', 'Minimalist', 'Living Room'],
+    gallery_urls: ['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80']
   },
+  {
+    id: 'proj-4',
+    category_id: 'cat-1',
+    category_name: 'Residential Estates',
+    category_slug: 'residential',
+    name: 'Elegant Bedroom',
+    slug: 'elegant-bedroom',
+    description: 'A master bedroom suite designed with customized sound-dampening panels, walk-in dressing areas, and automated warm ambient lights.',
+    location: 'Juhu, Mumbai',
+    completion_year: 2026,
+    cover_image_url: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80',
+    tags: ['Bedroom', 'Elegant', 'Cozy'],
+    gallery_urls: ['https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'proj-5',
+    category_id: 'cat-2',
+    category_name: 'Commercial Spaces',
+    category_slug: 'commercial',
+    name: 'Premium Office',
+    slug: 'premium-office',
+    description: 'A corporate headquarters combining acoustic glass paneling, smart wire routing, ergonomic layouts, and custom walnut conference tables.',
+    location: 'BKC, Mumbai',
+    completion_year: 2025,
+    cover_image_url: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
+    tags: ['Office', 'Corporate', 'Executive'],
+    gallery_urls: ['https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'proj-6',
+    category_id: 'cat-1',
+    category_name: 'Residential Estates',
+    category_slug: 'residential',
+    name: 'Contemporary Kitchen',
+    slug: 'contemporary-kitchen',
+    description: 'A state-of-the-art modular culinary hub with calacatta marble surfaces, integrated task lighting, and concealed handle-less cabinetry.',
+    location: 'Lokhandwala, Mumbai',
+    completion_year: 2026,
+    cover_image_url: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80',
+    tags: ['Kitchen', 'Contemporary', 'Modular'],
+    gallery_urls: ['https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'proj-7',
+    category_id: 'cat-2',
+    category_name: 'Commercial Spaces',
+    category_slug: 'commercial',
+    name: 'Boutique Café',
+    slug: 'boutique-cafe',
+    description: 'A chic coffee atelier styling fluted oak bars, micro-cement floor overlays, green wall segments, and custom pendant installations.',
+    location: 'Kala Ghoda, Mumbai',
+    completion_year: 2026,
+    cover_image_url: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80',
+    tags: ['Cafe', 'Boutique', 'Hospitality'],
+    gallery_urls: ['https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80']
+  },
+  {
+    id: 'proj-8',
+    category_id: 'cat-3',
+    category_name: 'Turnkey Solutions',
+    category_slug: 'turnkey',
+    name: 'Luxury Penthouse',
+    slug: 'luxury-penthouse',
+    description: 'A double-height skyline property styled with bronze metal railings, custom linen curtains, and fully integrated automated systems.',
+    location: 'Cuffe Parade, Mumbai',
+    completion_year: 2025,
+    cover_image_url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
+    tags: ['Penthouse', 'Turnkey', 'Estates'],
+    gallery_urls: ['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80']
+  }
 ];
 
 export async function getPortfolioCategories(): Promise<PortfolioCategory[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data: categories, error } = await supabase
       .from('portfolio_categories')
       .select('id, name, slug')
@@ -594,7 +795,7 @@ export async function getPortfolioCategories(): Promise<PortfolioCategory[]> {
 
 export async function getPortfolioProjects(): Promise<PortfolioProject[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data: projects, error } = await supabase
       .from('portfolio_projects')
       .select('*, portfolio_categories(name, slug)')
@@ -705,42 +906,52 @@ export interface Testimonial {
   client_title: string | null;
   quote: string;
   rating: number;
+  is_featured?: boolean;
+  video_url?: string | null;
 }
 
 const DEFAULT_DESIGN_PROCESS: DesignProcessStep[] = [
-  { step_number: 1, title: 'Bespoke Consultation', description: 'We analyze your natural nail shape, skin tone undertone, and lifestyle preference to craft a tailored manicure silhouette blueprint.' },
-  { step_number: 2, title: 'Precision Prep', description: 'Our artist conducts clean cuticle sculpting and structure building using non-invasive tools to establish an immaculate paint canvas.' },
-  { step_number: 3, title: 'Artistic Execution', description: 'Each layer is curated, using premium pigments, hand-painted detailing, gold leaf inserts, or custom chrome powders for a flawless luxury finish.' }
+  { step_number: 1, title: 'Discovery', description: 'We conduct an in-depth spatial consult, understanding your aesthetic preferences, style directives, and functional requirements.' },
+  { step_number: 2, title: 'Concept Development', description: 'We develop custom conceptual layouts, selecting primary textures, accent finishes, and bespoke furniture frameworks.' },
+  { step_number: 3, title: 'Space Planning', description: 'We outline precise spatial blueprints, dynamic movement vectors, and floor layout configurations.' },
+  { step_number: 4, title: '3D Visualization', description: 'We generate photorealistic 3D visual renderings, simulating daylight variations and material intersections.' },
+  { step_number: 5, title: 'Execution', description: 'We supervise on-site construction fit-outs, millwork milling, material check gates, and fittings.' },
+  { step_number: 6, title: 'Final Styling', description: 'We place final styling accessories, curate rugs and decorative objects, and hand over your ready keys.' }
 ];
 
 const DEFAULT_WHY_CHOOSE_US: WhyChooseUsItem[] = [
-  { title: 'Bespoke Curation', description: 'Every treatment is custom-built, mapping specific color profiles to complement your personal style.', icon_name: 'Sparkles' },
-  { title: 'Healthy Luxury', description: 'We use non-toxic, hypoallergenic builder gels and organic treatment oils prioritizing structural nail health.', icon_name: 'Shield' },
-  { title: 'Serene Sanctuary', description: 'Our physical space is quiet and minimalist, designed to offer a peaceful escape from urban clutter.', icon_name: 'Compass' }
+  { title: 'Experienced Designers', description: 'Our award-winning team of luxury interior designers and decorators brings years of high-end experience.', icon_name: 'Sparkles' },
+  { title: 'Personalized Solutions', description: 'We design bespoke solutions tailored specifically to your lifestyle, habits, and spatial vision.', icon_name: 'Compass' },
+  { title: 'Premium Materials', description: 'We source authentic, top-grade marble stone, sustainably-milled oak/walnut, and premium fittings.', icon_name: 'PenTool' },
+  { title: 'Transparent Process', description: 'Complete billing milestone transparency, itemized material checks, and regular scheduling logs.', icon_name: 'Shield' },
+  { title: 'Timely Delivery', description: 'We follow strict project timelines and checkpoint milestones to guarantee on-time key handovers.', icon_name: 'TrendingUp' },
+  { title: 'End-to-End Execution', description: 'From initial space plans to final styling details, we manage the entire turnkey project for you.', icon_name: 'Heart' }
 ];
 
 const DEFAULT_CORE_VALUES: CoreValueItem[] = [
-  { title: 'Impeccable Craft', description: 'We believe detail is everything. Our alignment, linework, and finishes are executed with surgical care.', icon_name: 'PenTool' },
-  { title: 'Total Wellness', description: 'True beauty starts from within. Hand health is nurtured at every phase of extension or manicure work.', icon_name: 'Heart' },
-  { title: 'Modern Vision', description: 'We look ahead, sourcing international patterns and premium materials for a contemporary look.', icon_name: 'TrendingUp' }
+  { title: 'Impeccable Craftsmanship', description: 'We believe structure is defined by its execution. All millwork and fittings are completed with surgical care.', icon_name: 'PenTool' },
+  { title: 'Attention to Detail', description: 'From shadow gaps to stone vein alignment, we align every component with visual harmony in mind.', icon_name: 'Sparkles' },
+  { title: 'Personalized Design', description: 'We reject copy-paste layouts, creating structures that are custom tailored to the client\'s identity.', icon_name: 'Compass' }
 ];
 
 const DEFAULT_PHILOSOPHY: DesignPhilosophy = {
   title: 'Our Design Philosophy',
-  description: 'At The Nailaa Studio, we view nail care not as simple grooming, but as an intimate art form. We reject noisy trends in favor of quiet confidence—shapes that are clean, colors that are deliberate, and structures that are lasting. True luxury is not loud; it is the breath of space between object and expression.',
-  quote: 'Simplicity is the ultimate sophistication. We design for the silence between elements.',
-  author: 'Nailaa Studio Artistry'
+  description: 'At The Nailaa Studio, we view interior architecture not as simple decorating, but as a silent art form. We reject noisy, loud trends in favor of quiet luxury—structures that are clean, materials that are authentic, and details that are deliberate. True elegance is found in the restraint between architecture and styling.',
+  quote: 'Luxury is in the space between. We design for the quiet harmony of structure, light, and material.',
+  author: 'The Nailaa Studio'
 };
 
 const DEFAULT_TESTIMONIALS: Testimonial[] = [
-  { client_name: 'Aishwarya Sen', client_title: 'Regular Client', quote: 'The attention to structure is unlike any other studio. My builder gel overlays last 4+ weeks while keeping my natural nails healthy.', rating: 5 },
-  { client_name: 'Meera Rajput', client_title: 'Creative Director', quote: 'Quiet luxury personified. The clean interior, personalized color advice, and surgical precision in cuticle prep are exceptional.', rating: 5 },
-  { client_name: 'Rohan Mehra', client_title: 'Art Curator', quote: 'A serene sanctuary. The minimalist art on my nails feels contemporary and custom-crafted. The team understands design proportion.', rating: 5 }
+  { client_name: 'Aishwarya Sen', client_title: 'Villa Owner', quote: 'The attention to shadow gaps and material alignment in my minimal Scandinavian villa is exceptional. The Nailaa Studio respects craftsmanship.', rating: 5 },
+  { client_name: 'Rohan Malhotra', client_title: 'Managing Partner', quote: 'An outstanding execution for our corporate office. They managed dynamic flow and acoustic setups with complete professional transparency.', rating: 5 },
+  { client_name: 'Devika Roy', client_title: 'Boutique Café Owner', quote: 'They transformed our café into an inviting urban sanctuary. The fluted counter and micro-cement floors receive endless compliments.', rating: 5 },
+  { client_name: 'Meera Merchant', client_title: 'Luxury Retailer', quote: 'Our luxury showroom requires sophisticated layouts. The custom bronze accents and glass details they designed are masterfully executed.', rating: 5 },
+  { client_name: 'Kabir Kapoor', client_title: 'Penthouse Resident', quote: 'The turnkey handover of my Worli penthouse was effortless. They styled everything down to the bookshelf books. Absolutely premium service.', rating: 5 }
 ];
 
 export async function getDesignProcess(): Promise<DesignProcessStep[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('design_process_steps')
       .select('display_order, title, description')
@@ -764,7 +975,7 @@ export async function getDesignProcess(): Promise<DesignProcessStep[]> {
 
 export async function getWhyChooseUs(): Promise<WhyChooseUsItem[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('why_choose_features')
       .select('title, description, icon_name')
@@ -784,7 +995,7 @@ export async function getWhyChooseUs(): Promise<WhyChooseUsItem[]> {
 
 export async function getCoreValues(): Promise<CoreValueItem[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('core_values')
       .select('title, description, icon_name')
@@ -804,7 +1015,7 @@ export async function getCoreValues(): Promise<CoreValueItem[]> {
 
 export async function getDesignPhilosophy(): Promise<DesignPhilosophy> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('design_philosophy')
       .select('title, description, quote, author')
@@ -829,10 +1040,10 @@ export async function getDesignPhilosophy(): Promise<DesignPhilosophy> {
 
 export async function getTestimonials(): Promise<Testimonial[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('testimonials')
-      .select('client_name, designation, review_text, rating')
+      .select('client_name, designation, review_text, rating, is_featured, video_url')
       .is('deleted_at', null)
       .eq('is_visible', true)
       .order('display_order', { ascending: true });
@@ -846,6 +1057,8 @@ export async function getTestimonials(): Promise<Testimonial[]> {
       client_title: t.designation || 'Client',
       quote: t.review_text,
       rating: t.rating,
+      is_featured: t.is_featured,
+      video_url: t.video_url,
     }));
   } catch (err) {
     console.error('Error fetching testimonials from Supabase:', err);
@@ -880,7 +1093,7 @@ const DEFAULT_POPUP_SETTINGS: ConsultationPopupSettings = {
 
 export async function getProjectTypes(): Promise<ProjectType[]> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('project_types')
       .select('id, name')
@@ -910,7 +1123,7 @@ export async function getProjectTypes(): Promise<ProjectType[]> {
 
 export async function getConsultationPopupSettings(): Promise<ConsultationPopupSettings> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('consultation_popup_settings')
       .select('*')
@@ -942,7 +1155,7 @@ export async function getConsultationPopupSettings(): Promise<ConsultationPopupS
  */
 export async function getSiteCacheVersion(): Promise<number> {
   try {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data, error } = await supabase
       .from('site_cache_version')
       .select('version')

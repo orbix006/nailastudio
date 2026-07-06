@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Scissors, Briefcase, Image, Sliders, Settings, Inbox, BarChart3, LogOut, Shield, Menu, X, User } from 'lucide-react';
+import { LayoutDashboard, Scissors, Briefcase, Image, Sliders, Settings, Inbox, BarChart3, LogOut, Shield, Menu, X, User, Globe, MessageSquare, Mail, Calendar, FileText, Newspaper, FileSpreadsheet, Gift } from 'lucide-react';
 import { signOutAction } from '@/lib/supabase/actions';
 import { cn } from '@/lib/utils';
 
@@ -59,6 +59,46 @@ export function AdminSidebar({ admin }: AdminSidebarProps) {
       name: 'Analytics',
       href: '/admin/analytics',
       icon: BarChart3,
+    },
+    {
+      name: 'SEO Management',
+      href: '/admin/seo',
+      icon: Globe,
+    },
+    {
+      name: 'AI Conversations',
+      href: '/admin/chat',
+      icon: MessageSquare,
+    },
+    {
+      name: 'Email Templates',
+      href: '/admin/emails',
+      icon: Mail,
+    },
+    {
+      name: 'Appointments',
+      href: '/admin/appointments',
+      icon: Calendar,
+    },
+    {
+      name: 'Blog CMS',
+      href: '/admin/blog',
+      icon: FileText,
+    },
+    {
+      name: 'Newsletter',
+      href: '/admin/newsletter',
+      icon: Newspaper,
+    },
+    {
+      name: 'PDF Console',
+      href: '/admin/pdf',
+      icon: FileSpreadsheet,
+    },
+    {
+      name: 'Marketing',
+      href: '/admin/marketing',
+      icon: Gift,
     },
   ];
 

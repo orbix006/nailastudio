@@ -8,12 +8,28 @@ import {
   getCachedConsultationPopupSettings,
   getCachedThemeSettings,
   getCachedSiteCacheVersion,
+  getCachedServices,
+  getCachedPortfolioProjects,
 } from '@/lib/supabase/cached-queries';
 import { Header } from '@/components/public/Header';
 import { Footer } from '@/components/public/Footer';
-import { FloatingControls } from '@/components/public/FloatingControls';
-import { LayoutInquiryModal } from '@/components/public/LayoutInquiryModal';
-import { ConsultationPopup } from '@/components/public/ConsultationPopup';
+import nextDynamic from 'next/dynamic';
+
+const FloatingControls = nextDynamic(
+  () => import('@/components/public/FloatingControls').then((mod) => mod.FloatingControls)
+);
+
+const LayoutInquiryModal = nextDynamic(
+  () => import('@/components/public/LayoutInquiryModal').then((mod) => mod.LayoutInquiryModal)
+);
+
+const ConsultationPopup = nextDynamic(
+  () => import('@/components/public/ConsultationPopup').then((mod) => mod.ConsultationPopup)
+);
+
+const AiAssistant = nextDynamic(
+  () => import('@/components/public/AiAssistant').then((mod) => mod.AiAssistant)
+);
 
 export default async function PublicLayout({
   children,
@@ -24,18 +40,25 @@ export default async function PublicLayout({
   const version = await getCachedSiteCacheVersion();
 
   // Parallel fetch all layout data
-  const [settings, socials, projectTypes, popupSettings, theme] = await Promise.all([
+  const [settings, socials, projectTypes, popupSettings, theme, services, projects] = await Promise.all([
     getCachedWebsiteSettings(version),
     getCachedSocialLinks(version),
     getCachedProjectTypes(version),
     getCachedConsultationPopupSettings(version),
     getCachedThemeSettings(version),
+    getCachedServices(version),
+    getCachedPortfolioProjects(version),
   ]);
 
-  const whatsappLink = socials.find((s) => s.platform === 'whatsapp')?.url || null;
+  const whatsappLink = settings.whatsapp_number
+    ? `https://wa.me/${settings.whatsapp_number.replace(/\D/g, '')}?text=${encodeURIComponent(settings.whatsapp_default_message || '')}`
+    : socials.find((s) => s.platform === 'whatsapp')?.url || null;
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Preconnect to Font Domains */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       {/* Dynamic Font Loader */}
       <link 
         rel="stylesheet" 
@@ -134,6 +157,9 @@ export default async function PublicLayout({
 
       {/* Database-Driven Consultation Popup */}
       <ConsultationPopup settings={popupSettings} projectTypes={projectTypes} />
+
+      {/* Floating AI Consultation Assistant */}
+      <AiAssistant services={services} projects={projects} projectTypes={projectTypes} />
     </div>
   );
 }

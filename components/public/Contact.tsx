@@ -19,7 +19,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="py-24 bg-[#141414] text-white font-sans overflow-hidden border-t border-[#C9A86A]/5"
+      className="py-24 bg-white dark:bg-[#141414] text-stone-900 dark:text-white font-sans overflow-hidden border-t border-stone-200 dark:border-[#C9A86A]/5"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -38,14 +38,14 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
         </div>
 
         <div className="max-w-5xl mx-auto animate-fade-in-up">
-          <Card className="bg-[#1A1A1A] border-[#C9A86A]/10 shadow-2xl overflow-hidden">
+          <Card className="bg-white dark:bg-[#1A1A1A] border-stone-200 dark:border-[#C9A86A]/10 shadow-2xl overflow-hidden">
             <CardContent className="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
 
               
               {/* Left Side: Contact Information & Hours (lg:col-span-5) */}
               <div className="lg:col-span-5 space-y-8 flex flex-col justify-between">
                 <div className="space-y-6">
-                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-white tracking-wide border-b border-gray-800 pb-3">
+                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-stone-900 dark:text-white tracking-wide border-b border-stone-100 dark:border-gray-800 pb-3">
                     Contact Details
                   </h3>
                   
@@ -53,7 +53,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                     {phone && (
                       <a
                         href={`tel:${phone}`}
-                        className="flex items-center space-x-4 p-2.5 rounded-lg hover:bg-white/5 transition-all duration-300 group"
+                        className="flex items-center space-x-4 p-2.5 rounded-lg hover:bg-stone-50 dark:hover:bg-white/5 transition-all duration-300 group"
                       >
                         <div className="p-2 rounded-full bg-[#C9A86A]/10 text-[#C9A86A] group-hover:bg-[#C9A86A] group-hover:text-[#111111] transition-all flex-shrink-0">
                           <Phone className="h-4 w-4" />
@@ -62,7 +62,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                           <span className="text-[9px] uppercase tracking-widest text-[#8A7052] font-semibold">
                             Call Us
                           </span>
-                          <p className="text-white text-xs sm:text-sm font-light tracking-wide">{phone}</p>
+                          <p className="text-stone-900 dark:text-white text-xs sm:text-sm font-light tracking-wide">{phone}</p>
                         </div>
                       </a>
                     )}
@@ -70,7 +70,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                     {email && (
                       <a
                         href={`mailto:${email}`}
-                        className="flex items-center space-x-4 p-2.5 rounded-lg hover:bg-white/5 transition-all duration-300 group"
+                        className="flex items-center space-x-4 p-2.5 rounded-lg hover:bg-stone-50 dark:hover:bg-white/5 transition-all duration-300 group"
                       >
                         <div className="p-2 rounded-full bg-[#C9A86A]/10 text-[#C9A86A] group-hover:bg-[#C9A86A] group-hover:text-[#111111] transition-all flex-shrink-0">
                           <Mail className="h-4 w-4" />
@@ -79,7 +79,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                           <span className="text-[9px] uppercase tracking-widest text-[#8A7052] font-semibold">
                             Email Us
                           </span>
-                          <p className="text-white text-xs sm:text-sm font-light tracking-wide">{email}</p>
+                          <p className="text-stone-900 dark:text-white text-xs sm:text-sm font-light tracking-wide">{email}</p>
                         </div>
                       </a>
                     )}
@@ -93,7 +93,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                           <span className="text-[9px] uppercase tracking-widest text-[#8A7052] font-semibold">
                             Visit Studio
                           </span>
-                          <p className="text-gray-300 text-xs sm:text-sm font-light leading-relaxed">{address}</p>
+                          <p className="text-stone-600 dark:text-gray-300 text-xs sm:text-sm font-light leading-relaxed">{address}</p>
                         </div>
                       </div>
                     )}
@@ -101,7 +101,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                 </div>
 
                 <div className="space-y-6">
-                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-white tracking-wide border-b border-gray-800 pb-3">
+                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-stone-900 dark:text-white tracking-wide border-b border-stone-100 dark:border-gray-800 pb-3">
                     Studio Timings
                   </h3>
                   
@@ -114,7 +114,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                         <span className="text-[9px] uppercase tracking-widest text-[#8A7052] font-semibold">
                           Timings
                         </span>
-                        <p className="text-gray-300 text-xs sm:text-sm font-light leading-relaxed whitespace-pre-line mt-0.5">
+                        <p className="text-stone-600 dark:text-gray-300 text-xs sm:text-sm font-light leading-relaxed whitespace-pre-line mt-0.5">
                           {hours}
                         </p>
                       </div>
@@ -122,12 +122,12 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                   )}
                 </div>
 
-                <div className="border-t border-gray-850 pt-4 select-none">
+                <div className="border-t border-stone-100 dark:border-gray-850 pt-4 select-none">
                   <p className="text-[10px] text-[#C9A86A] uppercase tracking-[0.25em] font-semibold">
-                    The Nailaa Experience
+                    The Atelier Experience
                   </p>
-                  <p className="text-gray-400 text-[11px] font-light leading-relaxed mt-1">
-                    Bookings are highly recommended to ensure individualized care and custom styling selections.
+                  <p className="text-stone-500 dark:text-gray-400 text-[11px] font-light leading-relaxed mt-1">
+                    Consultations are highly recommended to ensure dedicated design attention and custom material selections.
                   </p>
                 </div>
               </div>

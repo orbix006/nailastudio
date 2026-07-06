@@ -13,7 +13,7 @@ export function About({ content }: AboutProps) {
   const headerTransition = { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const };
 
   return (
-    <section id="about" aria-labelledby="about-heading" className="py-24 bg-[#111111] text-white overflow-hidden font-sans">
+    <section id="about" aria-labelledby="about-heading" className="py-24 bg-stone-50 dark:bg-[#111111] text-stone-900 dark:text-white overflow-hidden font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Global section header */}
@@ -25,7 +25,7 @@ export function About({ content }: AboutProps) {
           className="text-center mb-20"
         >
           <span className="text-xs uppercase tracking-[0.3em] text-[#C9A86A] font-semibold" aria-hidden="true">
-            Bespoke Artistry
+            Luxury Interior Studio
           </span>
           <h2 id="about-heading" className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
             The Nailaa Studio
@@ -45,7 +45,7 @@ export function About({ content }: AboutProps) {
             <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#C9A86A] tracking-wide">
               Our Story
             </h3>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-light">
+            <p className="text-stone-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed font-light">
               {content.intro_text}
             </p>
           </motion.div>
@@ -59,7 +59,7 @@ export function About({ content }: AboutProps) {
           >
             <Image
               src={content.intro_image_url}
-              alt="Nail Artistry at The Nailaa Studio"
+              alt="Luxury interior design mood board selection, fabric swatches, and material samples at The Nailaa Studio"
               fill
               loading="lazy"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -79,7 +79,7 @@ export function About({ content }: AboutProps) {
           >
             <Image
               src={content.vision_image_url}
-              alt="Our Vision for Luxury Grooming"
+              alt="Timeless Scandinavian residential villa interior with floor-to-ceiling glass and soft neutral colors"
               fill
               loading="lazy"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -97,7 +97,7 @@ export function About({ content }: AboutProps) {
             <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#C9A86A] tracking-wide">
               Our Vision
             </h3>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-light">
+            <p className="text-stone-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed font-light">
               {content.vision_text}
             </p>
           </motion.div>
@@ -115,7 +115,7 @@ export function About({ content }: AboutProps) {
             <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#C9A86A] tracking-wide">
               Our Mission
             </h3>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-light">
+            <p className="text-stone-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed font-light">
               {content.mission_text}
             </p>
           </motion.div>
@@ -129,7 +129,7 @@ export function About({ content }: AboutProps) {
           >
             <Image
               src={content.mission_image_url}
-              alt="Our Mission for Bespoke Hand Care"
+              alt="Professional architect drafting floor plan layout blueprint on large wooden table"
               fill
               loading="lazy"
               sizes="(max-width: 768px) 100vw, 50vw"

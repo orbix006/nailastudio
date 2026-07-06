@@ -1,0 +1,56 @@
+[
+  {
+    "id": "tpl-invoice",
+    "type": "invoice",
+    "clientName": "Ananya Sharma",
+    "clientEmail": "client@example.com",
+    "docNumber": "INV-2026-004",
+    "docDate": "2026-07-04",
+    "dueDate": "2026-07-15",
+    "subject": "Bespoke Bridal Salon Styling Package",
+    "items": [
+      {
+        "id": "itm-1",
+        "description": "Premium Builder Gel Overlay Treatment (Bridal Base)",
+        "quantity": 1,
+        "price": 8500
+      },
+      {
+        "id": "itm-2",
+        "description": "Hand-Placed 24k Gold Foil Accents & Chrome Finishes",
+        "quantity": 10,
+        "price": 650
+      }
+    ],
+    "terms": "Please make payments within 10 days of invoice generation. Receipts will be visible in the Client Portal.",
+    "brandColor": "#C9A86A",
+    "layout": "modern"
+  },
+  {
+    "id": "tpl-proposal",
+    "type": "proposal",
+    "clientName": "Meera Rajput",
+    "clientEmail": "meera@example.com",
+    "docNumber": "PROP-2026-012",
+    "docDate": "2026-07-04",
+    "dueDate": "",
+    "subject": "Creative Direction & Art Curation Styling Plan",
+    "items": [
+      {
+        "id": "itm-1",
+        "description": "Initial Consultation & Lifestyle Mapping Analysis",
+        "quantity": 1,
+        "price": 3500
+      },
+      {
+        "id": "itm-2",
+        "description": "4-Session Nail Wellness & Therapeutic Cuticle Repairs",
+        "quantity": 4,
+        "price": 2200
+      }
+    ],
+    "terms": "This proposal remains active for 30 days. Signatures are required to schedule custom mix sessions.",
+    "brandColor": "#8A7052",
+    "layout": "classic"
+  }
+]

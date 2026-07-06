@@ -103,7 +103,7 @@ export function Hero({ settings }: HeroProps) {
           >
             <Image
               src={settings.background_image_url || '/images/hero_background.png'}
-              alt="The Nailaa Studio Salon Background"
+              alt="The Nailaa Studio - Modern luxury living room with natural lighting, premium neutral furniture, textured walls, and marble finishes"
               fill
               priority
               sizes="100vw"
@@ -138,7 +138,7 @@ export function Hero({ settings }: HeroProps) {
         {/* Dynamic Heading */}
         <motion.h1
           variants={itemVariants}
-          className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold tracking-wide text-white leading-tight mb-6"
+          className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold tracking-wide leading-tight mb-6 bg-gradient-to-b from-white via-white to-[#E5D5C0]/85 bg-clip-text text-transparent"
         >
           {settings.title}
         </motion.h1>
@@ -181,38 +181,6 @@ export function Hero({ settings }: HeroProps) {
           )}
         </motion.div>
       </motion.div>
-
-      {/* Pulsing Mouse Scroll Down Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center">
-        <motion.button
-          onClick={() => handleScrollTo('#services')}
-          aria-label="Scroll down to services section"
-          className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5 cursor-pointer opacity-75 hover:opacity-100 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
-          animate={{
-            y: [0, 8, 0],
-          }}
-          transition={{
-            duration: 1.8,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        >
-          <motion.div
-            animate={{
-              y: [0, 12, 0],
-            }}
-            transition={{
-              duration: 1.8,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-            className="w-1.5 h-1.5 rounded-full bg-[#C9A86A]"
-          />
-        </motion.button>
-        <span className="text-[10px] uppercase tracking-[0.25em] text-gray-500 mt-2 select-none pointer-events-none">
-          Scroll Down
-        </span>
-      </div>
     </div>
   );
 }

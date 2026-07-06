@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea, Label } from '@/components/ui/FormControls';
 import { 
-  Inbox, Search, Filter, Download, CheckSquare, Eye, Loader2, 
-  Calendar, User, ArrowLeft, ArrowRight, UserCheck, AlertCircle, Clock
+  Inbox, Search, Filter, Download, Eye, Loader2, 
+  Calendar, User, ArrowLeft, ArrowRight, Clock
 } from 'lucide-react';
 import { logAdminAction } from '@/lib/supabase/audit';
 
@@ -44,11 +44,11 @@ interface AdminProfile {
 
 const STATUS_OPTIONS = [
   { label: 'New', value: 'new', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
-  { label: 'Read', value: 'read', color: 'bg-gray-500/10 text-gray-400 border-gray-500/20' },
   { label: 'Contacted', value: 'contacted', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' },
-  { label: 'In Progress', value: 'in_progress', color: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
-  { label: 'Resolved', value: 'resolved', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
-  { label: 'Closed', value: 'closed', color: 'bg-red-500/10 text-red-400 border-red-500/20' },
+  { label: 'Qualified', value: 'read', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' },
+  { label: 'Proposal Sent', value: 'in_progress', color: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
+  { label: 'Won', value: 'resolved', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+  { label: 'Lost', value: 'closed', color: 'bg-red-500/10 text-red-400 border-red-500/20' },
 ];
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -93,10 +93,179 @@ export default function LeadsCRMPage() {
   const [editAssignee, setEditAssignee] = useState<string>('');
   const [editFollowUpDate, setEditFollowUpDate] = useState('');
   const [editStatus, setEditStatus] = useState<InquiryRow['status']>('new');
+  
+  interface AuditLogHistory {
+    created_at: string;
+    action: string;
+    metadata: Record<string, unknown> | null;
+    admin_profiles: { full_name: string } | null;
+  }
+  
+  const [leadHistory, setLeadHistory] = useState<AuditLogHistory[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  // Notes and Attachments parser
+  const parseNotes = useCallback((rawNotes: string | null) => {
+    if (!rawNotes) return { notes: '', attachments: [] };
+    try {
+      const parsed = JSON.parse(rawNotes);
+      if (parsed && typeof parsed === 'object' && 'notes' in parsed) {
+        return {
+          notes: parsed.notes || '',
+          attachments: (parsed.attachments || []) as { name: string; url: string }[],
+        };
+      }
+    } catch {
+      // Fallback
+    }
+    return { notes: rawNotes, attachments: [] as { name: string; url: string }[] };
+  }, []);
+
+  // Fetch lead audit logs timeline
+  const fetchLeadHistory = useCallback(async (leadId: string) => {
+    try {
+      setLoadingHistory(true);
+      const { data } = await supabase
+        .from('audit_logs')
+        .select(`
+          created_at,
+          action,
+          metadata,
+          admin_profiles:admin_id ( full_name )
+        `)
+        .eq('table_name', 'inquiries')
+        .eq('record_id', leadId)
+        .order('created_at', { ascending: false });
+      
+      const formattedHistory: AuditLogHistory[] = ((data || []) as unknown[]).map((row) => {
+        const item = row as {
+          created_at: string;
+          action: string;
+          metadata: Record<string, unknown> | null;
+          admin_profiles: { full_name: string }[] | { full_name: string } | null;
+        };
+        const profile = Array.isArray(item.admin_profiles)
+          ? item.admin_profiles[0]
+          : item.admin_profiles;
+        return {
+          created_at: item.created_at,
+          action: item.action,
+          metadata: item.metadata,
+          admin_profiles: profile ? { full_name: profile.full_name } : null,
+        };
+      });
+      setLeadHistory(formattedHistory);
+    } catch (err) {
+      console.error('Failed to fetch lead history timeline:', err);
+    } finally {
+      setLoadingHistory(false);
+    }
+  }, [supabase]);
+
+  // Handle uploading attachments
+  const handleUploadAttachment = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedLead) return;
+
+    try {
+      setSaving(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${selectedLead.id}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+      const filePath = `leads/${fileName}`;
+
+      // Upload file to Supabase storage media bucket
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Resolve public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('media')
+        .getPublicUrl(filePath);
+
+      // Save attachment in JSON inside internal_notes
+      const currentData = parseNotes(selectedLead.internal_notes);
+      const updatedAttachments = [
+        ...currentData.attachments,
+        { name: file.name, url: publicUrl },
+      ];
+      const updatedInternalNotes = JSON.stringify({
+        notes: editNotes,
+        attachments: updatedAttachments,
+      });
+
+      // Update Database
+      const { error: updateError } = await supabase
+        .from('inquiries')
+        .update({
+          internal_notes: updatedInternalNotes,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', selectedLead.id);
+
+      if (updateError) throw updateError;
+      toast('Attachment uploaded successfully.', 'success');
+
+      // Update selected lead state dynamically
+      const newLead = { ...selectedLead, internal_notes: updatedInternalNotes };
+      setSelectedLead(newLead);
+      setInquiries(prev => prev.map(item => item.id === selectedLead.id ? newLead : item));
+      
+      await logAdminAction('update', 'inquiries', selectedLead.id, { attachment_added: file.name });
+      fetchLeadHistory(selectedLead.id);
+    } catch (err) {
+      console.error('Failed to upload file attachment:', err);
+      toast('Failed to upload file attachment.', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Handle deleting attachments
+  const handleDeleteAttachment = async (index: number) => {
+    if (!selectedLead) return;
+
+    try {
+      setSaving(true);
+      const currentData = parseNotes(selectedLead.internal_notes);
+      const updatedAttachments = currentData.attachments.filter((_: unknown, idx: number) => idx !== index);
+      const updatedInternalNotes = JSON.stringify({
+        notes: editNotes,
+        attachments: updatedAttachments,
+      });
+
+      // Update Database
+      const { error: updateError } = await supabase
+        .from('inquiries')
+        .update({
+          internal_notes: updatedInternalNotes,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', selectedLead.id);
+
+      if (updateError) throw updateError;
+      toast('Attachment deleted successfully.', 'success');
+
+      // Update state
+      const newLead = { ...selectedLead, internal_notes: updatedInternalNotes };
+      setSelectedLead(newLead);
+      setInquiries(prev => prev.map(item => item.id === selectedLead.id ? newLead : item));
+      
+      await logAdminAction('update', 'inquiries', selectedLead.id, { attachment_deleted: true });
+      fetchLeadHistory(selectedLead.id);
+    } catch (err) {
+      console.error('Failed to delete attachment:', err);
+      toast('Failed to delete attachment.', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // Load resources
   const loadData = useCallback(async () => {
@@ -142,11 +311,14 @@ export default function LeadsCRMPage() {
   // Operations
   const handleOpenLead = (lead: InquiryRow) => {
     setSelectedLead(lead);
-    setEditNotes(lead.internal_notes || '');
+    const parsed = parseNotes(lead.internal_notes);
+    setEditNotes(parsed.notes);
     setEditAssignee(lead.assigned_to || '');
     setEditFollowUpDate(lead.follow_up_date || '');
     setEditStatus(lead.status || 'new');
     setDetailModalOpen(true);
+    
+    fetchLeadHistory(lead.id);
 
     // Auto mark read if unread
     if (!lead.is_read) {
@@ -226,12 +398,18 @@ export default function LeadsCRMPage() {
 
     try {
       setSaving(true);
+      const currentNotesData = parseNotes(selectedLead.internal_notes);
+      const finalInternalNotes = JSON.stringify({
+        notes: editNotes.trim() || null,
+        attachments: currentNotesData.attachments
+      });
+
       const { error } = await supabase
         .from('inquiries')
         .update({
           assigned_to: editAssignee || null,
           follow_up_date: editFollowUpDate || null,
-          internal_notes: editNotes.trim() || null,
+          internal_notes: finalInternalNotes,
           status: editStatus,
           updated_at: new Date().toISOString()
         })
@@ -276,6 +454,7 @@ export default function LeadsCRMPage() {
       const type = item.project_types?.title || 'General Styling';
       const budget = BUDGET_LABELS[item.budget_range || ''] || 'Not Specified';
       const assignee = item.admin_profiles?.full_name || 'Unassigned';
+      const parsedNotes = parseNotes(item.internal_notes);
       
       return [
         new Date(item.created_at).toLocaleString(),
@@ -286,12 +465,12 @@ export default function LeadsCRMPage() {
         source,
         type,
         budget,
-        item.status,
+        STATUS_OPTIONS.find(o => o.value === item.status)?.label || item.status,
         item.is_read ? 'Yes' : 'No',
         assignee,
         item.follow_up_date || '',
         item.message.replace(/"/g, '""'), // escape quotes
-        (item.internal_notes || '').replace(/"/g, '""')
+        parsedNotes.notes.replace(/"/g, '""')
       ];
     });
 
@@ -628,79 +807,103 @@ export default function LeadsCRMPage() {
                 </p>
               </div>
 
+              {/* Attachments Block */}
+              <div className="p-5 rounded-lg border border-gray-850 bg-[#111111] space-y-4">
+                <div className="flex items-center justify-between border-b border-gray-800 pb-2">
+                  <span className="text-[9px] uppercase font-bold tracking-widest text-[#C9A86A] block">Lead Attachments</span>
+                  <label className="px-2.5 py-1 rounded bg-[#C9A86A]/10 text-[#C9A86A] hover:bg-[#C9A86A]/20 cursor-pointer text-[10px] uppercase font-semibold transition-all">
+                    Upload Attachment
+                    <input
+                      type="file"
+                      onChange={handleUploadAttachment}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {parseNotes(selectedLead.internal_notes).attachments.length === 0 ? (
+                  <p className="text-xs text-gray-500 italic">No document attachments uploaded yet.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {parseNotes(selectedLead.internal_notes).attachments.map((file, i) => (
+                      <div key={i} className="flex items-center justify-between p-2.5 rounded bg-[#161616] border border-gray-850 text-xs animate-fade-in">
+                        <a
+                          href={file.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#C9A86A] hover:text-[#C9A86A]/80 underline truncate pr-4 font-medium"
+                        >
+                          {file.name}
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteAttachment(i)}
+                          className="text-red-400 hover:text-red-300 text-[10px] uppercase font-bold cursor-pointer transition-all"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* CRM Dynamic Timeline */}
               <div className="space-y-4">
                 <span className="text-[10px] uppercase font-bold tracking-widest text-[#C9A86A] block">Lead History Timeline</span>
-                <div className="relative border-l border-gray-800 ml-3 pl-6 space-y-5 py-2">
-                  
-                  {/* Event 1: Creation */}
-                  <div className="relative">
-                    <span className="absolute -left-[30px] top-0 flex h-4 w-4 rounded-full bg-blue-900 border border-blue-500 items-center justify-center">
-                      <Inbox className="h-2 w-2 text-blue-400" />
-                    </span>
-                    <p className="text-xs text-white font-semibold">Lead Created</p>
-                    <p className="text-[10px] text-gray-500 mt-0.5">Inquiry submitted from {SOURCE_LABELS[selectedLead.source] || selectedLead.source}.</p>
-                    <span className="text-[9px] text-gray-600 block mt-0.5">{new Date(selectedLead.created_at).toLocaleString()}</span>
+                
+                {loadingHistory ? (
+                  <div className="flex items-center space-x-2 py-4 text-xs text-gray-500">
+                    <Loader2 className="h-4 w-4 animate-spin text-[#C9A86A]" />
+                    <span>Loading logs trail...</span>
                   </div>
-
-                  {/* Event 2: Read */}
-                  {selectedLead.is_read && (
-                    <div className="relative">
-                      <span className="absolute -left-[30px] top-0 flex h-4 w-4 rounded-full bg-gray-900 border border-gray-500 items-center justify-center">
-                        <Clock className="h-2 w-2 text-gray-400" />
+                ) : leadHistory.length === 0 ? (
+                  <div className="relative border-l border-gray-800 ml-3 pl-6 space-y-5 py-2 text-xs text-gray-500">
+                    <div className="relative animate-fade-in">
+                      <span className="absolute -left-[30px] top-0 flex h-4 w-4 rounded-full bg-blue-900 border border-blue-500 items-center justify-center">
+                        <Inbox className="h-2 w-2 text-blue-400" />
                       </span>
-                      <p className="text-xs text-white font-semibold">Marked Read</p>
-                      <p className="text-[10px] text-gray-550 mt-0.5">Inquiry opened and read by staff.</p>
-                      <span className="text-[9px] text-gray-600 block mt-0.5">{new Date(selectedLead.updated_at).toLocaleString()}</span>
+                      <p className="text-xs text-white font-semibold">Lead Created</p>
+                      <p className="text-[10px] text-gray-550 mt-0.5">Inquiry submitted from {SOURCE_LABELS[selectedLead.source] || selectedLead.source}.</p>
+                      <span className="text-[9px] text-gray-600 block mt-0.5">{new Date(selectedLead.created_at).toLocaleString()}</span>
                     </div>
-                  )}
+                  </div>
+                ) : (
+                  <div className="relative border-l border-gray-800 ml-3 pl-6 space-y-5 py-2">
+                    {leadHistory.map((item, index) => {
+                      const adminName = item.admin_profiles?.full_name || 'Staff User';
+                      let eventTitle = 'CRM Update';
+                      let description = `Pipeline log action: ${item.action}`;
+                      
+                      if (item.action === 'insert') {
+                        eventTitle = 'Lead Initiated';
+                        description = `New inquiry arrived from ${SOURCE_LABELS[selectedLead.source] || selectedLead.source}.`;
+                      } else if (item.action === 'triage') {
+                        eventTitle = 'Lead Triaged';
+                        const meta = item.metadata || {};
+                        const statusLabel = STATUS_OPTIONS.find(o => o.value === meta.status)?.label || meta.status || '';
+                        description = `Triage values updated: status is now ${statusLabel}.`;
+                      } else if (item.metadata?.attachment_added) {
+                        eventTitle = 'Attachment Uploaded';
+                        description = `Added document: ${item.metadata.attachment_added}`;
+                      } else if (item.metadata?.attachment_deleted) {
+                        eventTitle = 'Attachment Deleted';
+                        description = 'An attachment was removed.';
+                      }
 
-                  {/* Event 3: Assign */}
-                  {selectedLead.assigned_to && (
-                    <div className="relative">
-                      <span className="absolute -left-[30px] top-0 flex h-4 w-4 rounded-full bg-yellow-950 border border-yellow-500 items-center justify-center">
-                        <UserCheck className="h-2 w-2 text-yellow-400" />
-                      </span>
-                      <p className="text-xs text-white font-semibold">Owner Assigned</p>
-                      <p className="text-[10px] text-gray-550 mt-0.5">Assigned to admin account: {selectedLead.admin_profiles?.full_name || 'Staff'}.</p>
-                    </div>
-                  )}
-
-                  {/* Event 4: Schedule */}
-                  {selectedLead.follow_up_date && (
-                    <div className="relative">
-                      <span className="absolute -left-[30px] top-0 flex h-4 w-4 rounded-full bg-orange-950 border border-orange-500 items-center justify-center">
-                        <Calendar className="h-2 w-2 text-orange-400" />
-                      </span>
-                      <p className="text-xs text-white font-semibold">Follow-Up Scheduled</p>
-                      <p className="text-[10px] text-gray-550 mt-0.5">Review callback date set for {new Date(selectedLead.follow_up_date).toLocaleDateString()}.</p>
-                    </div>
-                  )}
-
-                  {/* Event 5: Notes saved */}
-                  {selectedLead.internal_notes && (
-                    <div className="relative">
-                      <span className="absolute -left-[30px] top-0 flex h-4 w-4 rounded-full bg-blue-950 border border-blue-500 items-center justify-center">
-                        <AlertCircle className="h-2 w-2 text-blue-400" />
-                      </span>
-                      <p className="text-xs text-white font-semibold">Staff Notes Recorded</p>
-                      <p className="text-[10px] text-gray-550 mt-0.5">Internal notes logged for reference.</p>
-                    </div>
-                  )}
-
-                  {/* Event 6: Resolved */}
-                  {selectedLead.resolved_at && (
-                    <div className="relative">
-                      <span className="absolute -left-[30px] top-0 flex h-4 w-4 rounded-full bg-emerald-950 border border-emerald-500 items-center justify-center">
-                        <CheckSquare className="h-2 w-2 text-emerald-400" />
-                      </span>
-                      <p className="text-xs text-white font-semibold">Lead Resolved</p>
-                      <p className="text-[10px] text-gray-550 mt-0.5">Triaged pipeline completed, resolved successfully.</p>
-                      <span className="text-[9px] text-gray-600 block mt-0.5">{new Date(selectedLead.resolved_at).toLocaleString()}</span>
-                    </div>
-                  )}
-
-                </div>
+                      return (
+                        <div key={index} className="relative animate-fade-in">
+                          <span className="absolute -left-[30px] top-0 flex h-4 w-4 rounded-full bg-indigo-950 border border-indigo-500 items-center justify-center">
+                            <Clock className="h-2 w-2 text-indigo-400" />
+                          </span>
+                          <p className="text-xs text-white font-semibold">{eventTitle}</p>
+                          <p className="text-[10px] text-gray-400 mt-0.5">{description}</p>
+                          <span className="text-[9px] text-gray-600 block mt-1">By {adminName} • {new Date(item.created_at).toLocaleString()}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
             </div>

@@ -21,6 +21,7 @@ interface TestimonialRow {
   is_featured: boolean;
   is_visible: boolean;
   display_order?: number;
+  video_url?: string | null;
 }
 
 // Icon library list to pick for features/processes
@@ -107,7 +108,7 @@ export default function ContentManagementPage() {
   });
 
   // Testimonials state
-  const [testimonials, setTestimonials] = useState<{ id: string; client_name: string; designation: string; review_text: string; rating: number; is_featured: boolean; is_visible: boolean; display_order: number }[]>([]);
+  const [testimonials, setTestimonials] = useState<{ id: string; client_name: string; designation: string; review_text: string; rating: number; is_featured: boolean; is_visible: boolean; display_order: number; video_url?: string | null }[]>([]);
   const [testimonialModalOpen, setTestimonialModalOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<TestimonialRow | null>(null);
 
@@ -423,6 +424,7 @@ export default function ContentManagementPage() {
       rating: 5,
       is_featured: false,
       is_visible: true,
+      video_url: '',
     });
     setTestimonialModalOpen(true);
   };
@@ -440,6 +442,7 @@ export default function ContentManagementPage() {
         rating: Number(editingTestimonial.rating),
         is_featured: editingTestimonial.is_featured,
         is_visible: editingTestimonial.is_visible,
+        video_url: editingTestimonial.video_url?.trim() || null,
         updated_by: adminUser?.id,
       };
 
@@ -1290,6 +1293,11 @@ export default function ContentManagementPage() {
                             Featured
                           </span>
                         )}
+                        {item.video_url && (
+                          <span className="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[8px] uppercase tracking-wider font-bold border border-blue-500/20">
+                            Video Review
+                          </span>
+                        )}
                       </div>
 
                       <div className="flex items-center space-x-2">
@@ -1479,6 +1487,13 @@ export default function ContentManagementPage() {
               value={editingTestimonial.designation || ''}
               onChange={(e) => setEditingTestimonial({ ...editingTestimonial, designation: e.target.value })}
               placeholder="e.g. Regular Client / Art Curator"
+            />
+
+            <Input
+              label="Video Testimonial URL (Optional)"
+              value={editingTestimonial.video_url || ''}
+              onChange={(e) => setEditingTestimonial({ ...editingTestimonial, video_url: e.target.value })}
+              placeholder="e.g. https://www.youtube.com/watch?v=... or .mp4"
             />
 
             <div className="space-y-1.5">

@@ -1,0 +1,48 @@
+[
+  {
+    "id": "blog-1",
+    "title": "The Art of Biophilic Styling: Bringing Nature Indoors",
+    "slug": "art-of-biophilic-styling",
+    "excerpt": "Discover how to integrate natural elements, raw stones, and biophilic lighting layouts into luxury retail spaces to enhance visitor well-being.",
+    "content": "# The Art of Biophilic Styling\n\nIntegrating natural elements is more than a trend; it is a fundamental shift in design philosophy. By using **natural stones**, calculated **interior planters**, and daylighting design, we establish styling sanctuaries that soothe and inspire.\n\n## Core Principles\n- Sourcing raw, textured materials.\n- Harnessing natural light paths.\n- Implementing biological geometry.",
+    "author": {
+      "name": "Nailaa Curator",
+      "bio": "Lead Interior Stylist and Spatial Designer at The Nailaa Studio.",
+      "avatarUrl": "/images/about_mission.png"
+    },
+    "category": "Design Trends",
+    "tags": ["Biophilic", "Wellness", "Sustainability"],
+    "status": "published",
+    "publishedAt": "2026-06-15T12:00:00.000Z",
+    "featuredImage": "/images/about_intro.png",
+    "seo": {
+      "metaTitle": "Biophilic Styling and Natural Design | The Nailaa Studio",
+      "metaDescription": "Learn how to bring nature indoors with premium biophilic elements, lighting, and textures.",
+      "metaKeywords": "biophilic, wellness design, interior styling, nature"
+    },
+    "createdAt": "2026-06-15T12:00:00.000Z"
+  },
+  {
+    "id": "blog-2",
+    "title": "Mastering Luxury Gradients in Modern Commercial Salons",
+    "slug": "mastering-luxury-gradients",
+    "excerpt": "A deep dive into curating rich color palettes, gold-accented wall partition lines, and soft ambient drop shadows to compile premium styling suites.",
+    "content": "# Mastering Luxury Gradients\n\nGradient styling defines modern salons. By carefully blending rich, muted color palettes with **gold trim accents** and custom lighting overlays, we craft spaces that feel premium and inviting.\n\n## Design Blueprint\n1. Select a curated dark or warm neutral base.\n2. Add high-contrast metallic borders.\n3. Calibrate spot and ambient illumination paths.",
+    "author": {
+      "name": "Nailaa Curator",
+      "bio": "Lead Interior Stylist and Spatial Designer at The Nailaa Studio.",
+      "avatarUrl": "/images/about_mission.png"
+    },
+    "category": "Color Theory",
+    "tags": ["Color Palettes", "Luxury", "Salon Design"],
+    "status": "published",
+    "publishedAt": "2026-06-28T14:30:00.000Z",
+    "featuredImage": "/images/hero_background.png",
+    "seo": {
+      "metaTitle": "Mastering Salon Gradients | The Nailaa Studio",
+      "metaDescription": "A complete blueprint on using colors, materials, and gold trims to design commercial luxury salons.",
+      "metaKeywords": "salon design, gradients, luxury accents, color theory"
+    },
+    "createdAt": "2026-06-28T14:30:00.000Z"
+  }
+]

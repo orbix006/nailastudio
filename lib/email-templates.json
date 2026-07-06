@@ -1,0 +1,34 @@
+{
+  "contact_form": {
+    "name": "Contact Form Confirmation",
+    "subject": "Thank you for reaching out to The Nailaa Studio",
+    "title": "We Have Received Your Message",
+    "body": "<p>Dear {{CLIENT_NAME}},</p><p>Thank you for contacting The Nailaa Studio. Our design curators have received your message and will review your request shortly.</p><p>Here is a copy of your inquiry:</p><div style='background-color:#1e1e1e; padding:15px; border-radius:6px; border:1px solid #C9A86A; margin:20px 0;'>{{MESSAGE}}</div><p>We typically respond within 24-48 business hours. In the meantime, feel free to browse our latest projects.</p>",
+    "button_text": "Explore Portfolio",
+    "button_url": "https://thenailaastudio.com/portfolio"
+  },
+  "consultation_popup": {
+    "name": "Consultation Inquiry Confirmation",
+    "subject": "Your Design Consultation with The Nailaa Studio",
+    "title": "Intake Consultation Received",
+    "body": "<p>Dear {{CLIENT_NAME}},</p><p>Thank you for submitting your details for a bespoke design consultation. We are excited to collaborate and bring your design space to life.</p><p>One of our lead designers will be in touch with you shortly to schedule your session.</p>",
+    "button_text": "View Our Services",
+    "button_url": "https://thenailaastudio.com/services"
+  },
+  "booking_confirmation": {
+    "name": "Booking Confirmation",
+    "subject": "Booking Confirmed - The Nailaa Studio",
+    "title": "Your Booking is Confirmed",
+    "body": "<p>Dear {{CLIENT_NAME}},</p><p>We are delighted to confirm your session booking with The Nailaa Studio. Our team is preparing to deliver a premium luxury experience.</p><p>If you need to make any changes or reschedule, please reply directly to this email or call our team.</p>",
+    "button_text": "Visit Admin Dashboard",
+    "button_url": "https://thenailaastudio.com/admin"
+  },
+  "admin_notification": {
+    "name": "Admin Notification",
+    "subject": "New Lead Submitted - The Nailaa Studio",
+    "title": "New Lead Inquiry Alert",
+    "body": "<p>Attention Admin,</p><p>A new lead has been submitted on the website. Here are the submission details:</p><table style='width:100%; border-collapse:collapse; margin:20px 0;'><tr><td style='padding:8px; border-bottom:1px solid #222; font-weight:bold;'>Name:</td><td style='padding:8px; border-bottom:1px solid #222;'>{{CLIENT_NAME}}</td></tr><tr><td style='padding:8px; border-bottom:1px solid #222; font-weight:bold;'>Email:</td><td style='padding:8px; border-bottom:1px solid #222;'>{{CLIENT_EMAIL}}</td></tr><tr><td style='padding:8px; border-bottom:1px solid #222; font-weight:bold;'>Message:</td><td style='padding:8px; border-bottom:1px solid #222;'>{{MESSAGE}}</td></tr></table><p>Please log in to the admin dashboard to review and follow up immediately.</p>",
+    "button_text": "Open Inbox CRM",
+    "button_url": "https://thenailaastudio.com/admin/leads"
+  }
+}

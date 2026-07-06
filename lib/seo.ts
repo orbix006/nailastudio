@@ -42,6 +42,7 @@ export async function buildMetadata(
   return {
     title: pageTitle,
     description: seo.description,
+    keywords: seo.keywords ? seo.keywords.split(',').map((k) => k.trim()) : undefined,
     robots: seo.noindex
       ? { index: false, follow: false }
       : { index: true, follow: true },

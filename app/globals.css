@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #111111;
   --color-secondary: #8A7052;
@@ -7,6 +9,9 @@
   
   --font-sans: var(--font-inter), sans-serif;
   --font-serif: var(--font-playfair), serif;
+  
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 }
 
 html {
@@ -14,24 +19,23 @@ html {
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #111111;
+  --background: #fafaf9; /* Warm stone-50 background for light mode */
+  --foreground: #1c1917; /* Charcoal/Stone-900 text for light mode */
   --primary: #111111;
   --secondary: #8A7052;
   --accent: #C9A86A;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #111111;
-    --foreground: #ffffff;
-  }
+.dark {
+  --background: #111111;
+  --foreground: #ffffff;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ─── CSS Animation Utilities (replaces framer-motion for static sections) ─── */
@@ -78,21 +82,28 @@ body {
 .animate-fade-in-up {
   animation: fade-in-up 0.7s ease-out both;
   animation-play-state: paused;
+  will-change: transform, opacity;
+  transform: translate3d(0,0,0);
 }
 
 .animate-fade-in {
   animation: fade-in 0.6s ease-out both;
   animation-play-state: paused;
+  will-change: opacity;
 }
 
 .animate-slide-in-left {
   animation: slide-in-left 0.8s ease-out both;
   animation-play-state: paused;
+  will-change: transform, opacity;
+  transform: translate3d(0,0,0);
 }
 
 .animate-slide-in-right {
   animation: slide-in-right 0.8s ease-out both;
   animation-play-state: paused;
+  will-change: transform, opacity;
+  transform: translate3d(0,0,0);
 }
 
 /* When element is in viewport (toggled by JS observer or :has selector), play animation */
@@ -136,4 +147,95 @@ body {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ─── Premium Luxury Micro-interactions & Effects ─── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+::-webkit-scrollbar-thumb {
+  background: #252525;
+  border-radius: 9px;
+  border: 1.5px solid #111111;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C9A86A;
+}
+
+.glass-premium {
+  background: rgba(26, 26, 26, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 168, 106, 0.08);
+}
+
+.glass-premium-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-premium-hover:hover {
+  background: rgba(30, 30, 30, 0.85);
+  border-color: rgba(201, 168, 106, 0.22);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(201, 168, 106, 0.12) inset;
+  transform: translateY(-2px);
+}
+
+.text-gradient-luxury {
+  background: linear-gradient(135deg, #ffffff 40%, #C9A86A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.border-gradient-gold {
+  border: 1px solid transparent;
+  background-image: linear-gradient(#1A1A1A, #1A1A1A), linear-gradient(135deg, #C9A86A, #8A7052);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.hover-lift {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px) scale(1.008);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
+}
+
+.hover-gold-glow {
+  transition: all 0.3s ease;
+}
+.hover-gold-glow:hover {
+  text-shadow: 0 0 8px rgba(201, 168, 106, 0.45);
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.shimmer-bg {
+  position: relative;
+  overflow: hidden;
+  background: #202020;
+}
+.shimmer-bg::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.02) 20%,
+    rgba(255, 255, 255, 0.06) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+  content: '';
 }

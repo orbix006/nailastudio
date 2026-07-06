@@ -20,7 +20,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ServiceDetailPage({ params }: Props) {
   const { slug } = await params;
   const version = await getCachedSiteCacheVersion();
-  const service = await getCachedServiceBySlug(slug, version);
+  const [service, seo] = await Promise.all([
+    getCachedServiceBySlug(slug, version),
+    getServiceSeo(slug),
+  ]);
 
   if (!service) notFound();
 
@@ -38,6 +41,12 @@ export default async function ServiceDetailPage({ params }: Props) {
     <div className="min-h-screen bg-[#111111] text-white">
       {/* JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
+      {seo.structured_data && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(seo.structured_data) }}
+        />
+      )}
 
       {/* Hero cover */}
       <div className="relative w-full h-[55vh] overflow-hidden">

@@ -31,7 +31,7 @@ export function DesignProcess({ steps }: DesignProcessProps) {
     <section
       id="process"
       aria-labelledby="process-heading"
-      className="py-24 bg-[#111111] text-white overflow-hidden font-sans border-t border-[#C9A86A]/5"
+      className="py-24 bg-stone-50 dark:bg-[#111111] text-stone-900 dark:text-white overflow-hidden font-sans border-t border-stone-200 dark:border-[#C9A86A]/5"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -67,7 +67,7 @@ export function DesignProcess({ steps }: DesignProcessProps) {
               className="flex flex-col items-center text-center space-y-4 group relative"
             >
               {/* Step Number Circle */}
-              <div className="w-16 h-16 rounded-full border border-[#C9A86A]/30 flex items-center justify-center bg-[#171717] group-hover:border-[#C9A86A] group-hover:bg-[#C9A86A]/10 transition-all duration-300 relative z-10">
+              <div className="w-16 h-16 rounded-full border border-[#C9A86A]/30 flex items-center justify-center bg-white dark:bg-[#171717] group-hover:border-[#C9A86A] group-hover:bg-[#C9A86A]/10 transition-all duration-300 relative z-10">
                 <span className="font-serif text-xl font-bold text-[#C9A86A]">
                   0{step.step_number}
                 </span>
@@ -78,10 +78,10 @@ export function DesignProcess({ steps }: DesignProcessProps) {
                 <div className="hidden md:block absolute top-8 left-[60%] w-full h-[1px] bg-gradient-to-r from-[#C9A86A]/20 to-transparent z-0 pointer-events-none" />
               )}
 
-              <h3 className="font-serif text-xl font-semibold text-white tracking-wide pt-2">
+              <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-white tracking-wide pt-2">
                 {step.title}
               </h3>
-              <p className="text-gray-400 text-sm leading-relaxed font-light max-w-xs">
+              <p className="text-stone-600 dark:text-gray-400 text-sm leading-relaxed font-light max-w-xs">
                 {step.description}
               </p>
             </motion.div>

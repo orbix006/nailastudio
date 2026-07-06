@@ -10,7 +10,7 @@
  */
 
 import { unstable_cache } from 'next/cache';
-import { createClient } from './server';
+import { createPublicClient } from './server';
 import {
   getWebsiteSettings,
   getThemeSettings,
@@ -28,6 +28,8 @@ import {
   getProjectTypes,
   getConsultationPopupSettings,
   getSiteCacheVersion,
+  DEFAULT_SERVICES,
+  DEFAULT_PROJECTS,
 } from './queries';
 
 const REVALIDATE_STATIC = 300;   // 5 min for settings, theme
@@ -221,7 +223,7 @@ interface ServiceQueryResult {
 
 const fetchServiceBySlug = unstable_cache(
   async (slug: string, _version: number) => {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data: service } = await supabase
       .from('services')
       .select(`
@@ -233,7 +235,24 @@ const fetchServiceBySlug = unstable_cache(
       .is('deleted_at', null)
       .maybeSingle() as unknown as { data: ServiceQueryResult | null };
 
-    if (!service) return null;
+    if (!service) {
+      const def = DEFAULT_SERVICES.find((s) => s.slug === slug);
+      if (def) {
+        return {
+          id: def.id,
+          title: def.title,
+          slug: def.slug,
+          short_description: def.short_description,
+          detailed_overview: def.detailed_overview,
+          design_approach: def.design_approach,
+          materials_finishes: def.materials_finishes,
+          coverUrl: def.cover_image_url || '/images/hero_background.png',
+          features: def.features.map((f) => ({ feature: f })),
+          galleryUrls: def.gallery_urls,
+        };
+      }
+      return null;
+    }
 
     // Resolve cover image
     let coverUrl = '/images/hero_background.png';
@@ -307,7 +326,7 @@ interface ProjectQueryResult {
 
 const fetchPortfolioProjectBySlug = unstable_cache(
   async (slug: string, _version: number) => {
-    const supabase = await createClient();
+    const supabase = await createPublicClient();
     const { data: project } = await supabase
       .from('portfolio_projects')
       .select(`
@@ -322,7 +341,25 @@ const fetchPortfolioProjectBySlug = unstable_cache(
       .is('deleted_at', null)
       .maybeSingle() as unknown as { data: ProjectQueryResult | null };
 
-    if (!project) return null;
+    if (!project) {
+      const def = DEFAULT_PROJECTS.find((p) => p.slug === slug);
+      if (def) {
+        return {
+          id: def.id,
+          name: def.name,
+          slug: def.slug,
+          description: def.description,
+          location: def.location,
+          completion_year: def.completion_year,
+          project_type: def.category_name,
+          coverUrl: def.cover_image_url || '/images/hero_background.png',
+          category: { name: def.category_name, slug: def.category_slug },
+          tags: def.tags,
+          galleryImages: def.gallery_urls.map((url) => ({ url, alt: def.name })),
+        };
+      }
+      return null;
+    }
 
     // Resolve cover image
     let coverUrl = '/images/hero_background.png';

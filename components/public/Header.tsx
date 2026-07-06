@@ -21,9 +21,11 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
   // Monitor page scroll to toggle glassmorphism style
   React.useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       if (window.scrollY > 10) {
         setIsScrolled(true);
@@ -39,7 +41,6 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
     { href: '/', label: 'Home' },
     { href: '/services', label: 'Services' },
     { href: '/portfolio', label: 'Portfolio' },
-    { href: '/testimonials', label: 'Testimonials' },
     { href: '/contact', label: 'Contact' },
   ];
 
@@ -51,9 +52,9 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
     <>
       <header
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 font-sans border-b',
+          'fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 font-sans border-b',
           isScrolled
-            ? 'bg-[#111111]/85 dark:bg-[#111111]/85 bg-white/85 backdrop-blur-md border-[#C9A86A]/20 dark:border-[#C9A86A]/10 py-3 shadow-lg'
+            ? 'bg-white/75 dark:bg-[#111111]/70 backdrop-blur-xl border-stone-200 dark:border-[#C9A86A]/10 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)]'
             : 'bg-transparent border-transparent py-5'
         )}
       >
@@ -87,7 +88,7 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
                   className={cn(
                     'text-sm font-semibold tracking-wide transition-colors duration-200 relative py-1 hover:text-[#C9A86A]',
                     'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1.5 py-0.5',
-                    isActive ? 'text-[#C9A86A]' : 'text-gray-400 dark:text-gray-400 text-gray-500'
+                    isActive ? 'text-[#C9A86A]' : 'text-stone-600 dark:text-gray-400'
                   )}
                 >
                   {link.label}
@@ -104,10 +105,16 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="rounded-full p-2 text-gray-400 hover:bg-gray-800/10 dark:hover:bg-gray-800 hover:text-[#C9A86A] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
+              className="rounded-full p-2 text-stone-500 dark:text-gray-400 hover:bg-stone-100 dark:hover:bg-gray-800 hover:text-[#C9A86A] dark:hover:text-[#C9A86A] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
               aria-label="Toggle theme mode"
             >
-              {theme === 'dark' ? <Sun className="h-5 w-5" aria-hidden="true" /> : <Moon className="h-5 w-5" aria-hidden="true" />}
+              {!mounted ? (
+                <div className="h-5 w-5" />
+              ) : theme === 'dark' ? (
+                <Sun className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Moon className="h-5 w-5" aria-hidden="true" />
+              )}
             </button>
 
             {/* Quick Consultation CTA Button (Desktop) */}
@@ -130,7 +137,7 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               aria-expanded={isMobileMenuOpen}
-              className="md:hidden rounded-full p-2 text-gray-400 hover:bg-gray-800/10 dark:hover:bg-gray-800 hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
+              className="md:hidden rounded-full p-2 text-stone-500 dark:text-gray-400 hover:bg-stone-100 dark:hover:bg-gray-800 hover:text-[#C9A86A] dark:hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]"
               aria-label="Open navigation menu"
             >
               <Menu className="h-6 w-6" aria-hidden="true" />
@@ -154,9 +161,9 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
                 href={link.href}
                 onClick={handleLinkClick}
                 className={cn(
-                  'text-lg font-bold tracking-wide transition-colors py-2 border-b border-gray-800/30 hover:text-[#C9A86A]',
+                  'text-lg font-bold tracking-wide transition-colors py-2 border-b border-stone-200 dark:border-gray-800/30 hover:text-[#C9A86A]',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1',
-                  isActive ? 'text-[#C9A86A]' : 'text-gray-400'
+                  isActive ? 'text-[#C9A86A]' : 'text-stone-500 dark:text-gray-400'
                 )}
               >
                 {link.label}

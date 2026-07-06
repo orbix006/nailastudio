@@ -119,7 +119,7 @@ export function Modal({
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ ease: [0.16, 1, 0.3, 1] as const, duration: 0.38 }}
             className={cn(
-              'relative z-10 w-full rounded-xl border border-[#C9A86A]/20 bg-[#1A1A1A] p-6 shadow-2xl text-white font-sans focus:outline-none',
+              'relative z-10 w-full rounded-xl border border-stone-200 dark:border-[#C9A86A]/20 bg-white dark:bg-[#1A1A1A] p-6 shadow-2xl text-stone-900 dark:text-white font-sans focus:outline-none',
               sizes[size],
               className
             )}
@@ -129,8 +129,8 @@ export function Modal({
               ref={closeButtonRef}
               onClick={onClose}
               className={cn(
-                'absolute right-4 top-4 rounded-full p-1.5 text-gray-400',
-                'hover:bg-gray-800 hover:text-white transition-colors cursor-pointer',
+                'absolute right-4 top-4 rounded-full p-1.5 text-stone-500 dark:text-gray-400',
+                'hover:bg-stone-100 dark:hover:bg-gray-800 hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A]'
               )}
               aria-label="Close dialog"
@@ -148,7 +148,7 @@ export function Modal({
                   {title}
                 </h2>
                 {description && (
-                  <p id={descId} className="text-sm text-gray-400 mt-1">
+                  <p id={descId} className="text-sm text-stone-500 dark:text-gray-400 mt-1">
                     {description}
                   </p>
                 )}
@@ -156,7 +156,7 @@ export function Modal({
             )}
 
             {/* Content Body */}
-            <div className="text-gray-300 text-sm leading-relaxed">{children}</div>
+            <div className="text-stone-700 dark:text-gray-300 text-sm leading-relaxed">{children}</div>
           </motion.div>
         </div>
       )}
