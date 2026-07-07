@@ -41,17 +41,16 @@ export function BlogDetailClient({ post, allPosts }: BlogDetailClientProps) {
       .slice(0, 3);
   }, [publishedPosts, post.id, post.category]);
 
-  // Share handler
+  // Share handler — pageUrl starts empty (matches SSR) and is set after mount
   const [copied, setCopied] = React.useState(false);
-  const getPageUrl = () => {
-    if (typeof window !== 'undefined') {
-      return window.location.href;
-    }
-    return '';
-  };
+  const [pageUrl, setPageUrl] = React.useState('');
+
+  React.useEffect(() => {
+    setPageUrl(window.location.href);
+  }, []);
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(getPageUrl());
+    navigator.clipboard.writeText(pageUrl || window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -351,7 +350,7 @@ export function BlogDetailClient({ post, allPosts }: BlogDetailClientProps) {
               <div className="grid grid-cols-4 gap-3">
                 {/* Twitter */}
                 <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(getPageUrl())}`}
+                  href={pageUrl ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(pageUrl)}` : '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex justify-center items-center p-3 rounded-lg border border-stone-200 dark:border-white/5 hover:border-sky-500/30 hover:bg-sky-500/5 text-stone-500 hover:text-sky-400 transition-colors focus:outline-none"
@@ -362,7 +361,7 @@ export function BlogDetailClient({ post, allPosts }: BlogDetailClientProps) {
 
                 {/* Facebook */}
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getPageUrl())}`}
+                  href={pageUrl ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}` : '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex justify-center items-center p-3 rounded-lg border border-stone-200 dark:border-white/5 hover:border-blue-500/30 hover:bg-blue-500/5 text-stone-500 hover:text-blue-400 transition-colors focus:outline-none"
@@ -373,7 +372,7 @@ export function BlogDetailClient({ post, allPosts }: BlogDetailClientProps) {
 
                 {/* WhatsApp */}
                 <a
-                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title + ' - ' + getPageUrl())}`}
+                  href={pageUrl ? `https://api.whatsapp.com/send?text=${encodeURIComponent(post.title + ' - ' + pageUrl)}` : '#'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex justify-center items-center p-3 rounded-lg border border-stone-200 dark:border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/5 text-stone-500 hover:text-emerald-400 transition-colors focus:outline-none"

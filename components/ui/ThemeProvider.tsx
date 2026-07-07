@@ -8,20 +8,24 @@ type ThemeContextType = {
   theme: Theme;
   toggleTheme: () => void;
   setTheme: (theme: Theme) => void;
+  isMounted: boolean;
 };
 
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children, defaultTheme = 'dark' }: { children: React.ReactNode; defaultTheme?: Theme }) {
-  const [theme, setThemeState] = useState<Theme>('dark'); // Dark mode by default
+  // Always start with the defaultTheme so server and client initial renders match
+  const [theme, setThemeState] = useState<Theme>(defaultTheme);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Check local storage or default db settings
+    // After hydration, read persisted preference from localStorage
     const savedTheme = localStorage.getItem('naila-theme') as Theme | null;
     const initialTheme = savedTheme || defaultTheme;
     setThemeState(initialTheme);
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
     document.documentElement.setAttribute('data-theme', initialTheme);
+    setIsMounted(true);
   }, [defaultTheme]);
 
   const setTheme = (newTheme: Theme) => {
@@ -36,9 +40,8 @@ export function ThemeProvider({ children, defaultTheme = 'dark' }: { children: R
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme, isMounted }}>
       {children}
     </ThemeContext.Provider>
   );
 }
-
