@@ -381,7 +381,7 @@ export default function ContentManagementPage() {
         .from('social_links')
         .insert({
           platform: 'instagram',
-          url: 'https://instagram.com/thenailaastudio',
+          url: 'https://www.instagram.com/the_nailaa_studio?igsh=Z253YmJqNG1nOTIx',
           display_order: nextOrder,
           is_active: true,
         });

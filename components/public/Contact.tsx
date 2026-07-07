@@ -85,8 +85,13 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                     )}
 
                     {address && (
-                      <div className="flex items-start space-x-4 p-2.5 rounded-lg">
-                        <div className="p-2 rounded-full bg-[#C9A86A]/10 text-[#C9A86A] mt-1 select-none flex-shrink-0">
+                      <a
+                        href="https://maps.app.goo.gl/2FxF3qqEpd8y28Ms9"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-start space-x-4 p-2.5 rounded-lg hover:bg-stone-50 dark:hover:bg-white/5 transition-all duration-300 group"
+                      >
+                        <div className="p-2 rounded-full bg-[#C9A86A]/10 text-[#C9A86A] mt-1 group-hover:bg-[#C9A86A] group-hover:text-[#111111] transition-all flex-shrink-0">
                           <MapPin className="h-4 w-4" />
                         </div>
                         <div>
@@ -95,7 +100,7 @@ export function Contact({ phone, email, address, hours, projectTypes }: ContactP
                           </span>
                           <p className="text-stone-600 dark:text-gray-300 text-xs sm:text-sm font-light leading-relaxed">{address}</p>
                         </div>
-                      </div>
+                      </a>
                     )}
                   </div>
                 </div>

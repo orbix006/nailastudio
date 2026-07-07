@@ -38,14 +38,61 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
   }, []);
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/services', label: 'Services' },
-    { href: '/portfolio', label: 'Portfolio' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/#hero', label: 'Home' },
+    { href: '/#about', label: 'About' },
+    { href: '/#services', label: 'Services' },
+    { href: '/#portfolio', label: 'Portfolio' },
+    { href: '/#contact', label: 'Contact' },
   ];
 
-  const handleLinkClick = () => {
-    setIsMobileMenuOpen(false);
+  const [activeHash, setActiveHash] = React.useState('');
+
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      setActiveHash(window.location.hash);
+    };
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  React.useEffect(() => {
+    if (window.location.hash) {
+      const hash = window.location.hash;
+      const targetId = hash.substring(1);
+      const timer = setTimeout(() => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [pathname]);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/#') || href === '/') {
+      const targetId = href === '/' ? 'hero' : href.substring(2);
+      
+      if (pathname === '/') {
+        e.preventDefault();
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          window.history.pushState(null, '', href);
+          setActiveHash(href === '/' ? '' : '#' + targetId);
+        } else if (href === '/') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.history.pushState(null, '', '/');
+          setActiveHash('');
+        }
+        setIsMobileMenuOpen(false);
+      } else {
+        setIsMobileMenuOpen(false);
+      }
+    } else {
+      setIsMobileMenuOpen(false);
+    }
   };
 
   return (
@@ -60,7 +107,11 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo / Branding */}
-          <Link href="/" className="flex items-center space-x-2 select-none group">
+          <Link 
+            href="/" 
+            onClick={(e) => handleNavClick(e, '/')}
+            className="flex items-center space-x-2 select-none group"
+          >
             {logoUrl ? (
               <Image
                 src={logoUrl}
@@ -80,11 +131,16 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const [, linkHash] = link.href.split('#');
+              const isLinkHome = link.href === '/#hero' || link.href === '/';
+              const isActive = pathname === '/' 
+                ? (isLinkHome ? (activeHash === '' || activeHash === '#hero') : activeHash === `#${linkHash}`)
+                : false;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className={cn(
                     'text-sm font-semibold tracking-wide transition-colors duration-200 relative py-1 hover:text-[#C9A86A]',
                     'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1.5 py-0.5',
@@ -154,12 +210,16 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
       >
         <div className="flex flex-col space-y-6 pt-4">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const [, linkHash] = link.href.split('#');
+            const isLinkHome = link.href === '/#hero' || link.href === '/';
+            const isActive = pathname === '/' 
+              ? (isLinkHome ? (activeHash === '' || activeHash === '#hero') : activeHash === `#${linkHash}`)
+              : false;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={handleLinkClick}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className={cn(
                   'text-lg font-bold tracking-wide transition-colors py-2 border-b border-stone-200 dark:border-gray-800/30 hover:text-[#C9A86A]',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1',

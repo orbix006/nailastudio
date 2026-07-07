@@ -90,97 +90,102 @@ export function BrandPhilosophy({ philosophy, whyChooseUs, coreValues }: BrandPh
           </div>
         </motion.div>
 
-        {/* PART 2: Why Choose Us & Core Values Double Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 pt-12 border-t border-stone-200 dark:border-gray-800/40">
+        {/* PART 2: Why Choose Us (Full-width Grid) */}
+        <div className="pt-16 border-t border-stone-200 dark:border-gray-800/40 space-y-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center md:text-left"
+          >
+            <span className="text-[10px] uppercase tracking-[0.25em] text-[#C9A86A] font-bold">
+              Excellence
+            </span>
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-wide mt-1">
+              Why Choose Us
+            </h3>
+          </motion.div>
+          
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-100px' }}
+            variants={cardListVariants}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {whyChooseUs.map((item, idx) => (
+              <motion.div key={idx} variants={cardItemVariants} className="flex">
+                <Card 
+                  hoverEffect 
+                  className="w-full flex flex-col justify-between bg-stone-50 dark:bg-[#1A1A1A] border-stone-200 dark:border-[#C9A86A]/10 hover:border-[#C9A86A]/30 transition-all duration-300 text-stone-900 dark:text-white"
+                >
+                  <CardContent className="p-6 flex flex-col h-full items-start space-y-4">
+                    <div className="p-3 rounded-lg bg-[#C9A86A]/10 text-[#C9A86A] flex-shrink-0">
+                      <ResolveIcon name={item.icon_name} className="h-6 w-6" />
+                    </div>
+                    <div className="space-y-2 flex-grow flex flex-col justify-start">
+                      <h4 className="font-serif text-lg font-semibold text-stone-900 dark:text-white leading-snug">
+                        {item.title}
+                      </h4>
+                      <p className="text-stone-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
+                        {item.description}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
 
-          {/* Column A: Why Choose Us */}
-          <div className="space-y-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[#C9A86A] font-bold">
-                Excellence
-              </span>
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-wide mt-1">
-                Why Choose Us
-              </h3>
-            </motion.div>
-            <motion.div 
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: '-100px' }}
-              variants={cardListVariants}
-              className="space-y-4"
-            >
-              {whyChooseUs.map((item, idx) => (
-                <motion.div key={idx} variants={cardItemVariants}>
-                  <Card hoverEffect className="bg-stone-50 dark:bg-[#1A1A1A] border-stone-200 dark:border-[#C9A86A]/5 hover:border-[#C9A86A]/20 transition-all duration-300">
-                    <CardContent className="p-5 flex items-start space-x-4">
-                      <div className="p-2 rounded-lg bg-[#C9A86A]/10 text-[#C9A86A] mt-1 flex-shrink-0">
-                        <ResolveIcon name={item.icon_name} className="h-5 w-5" />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="font-serif text-lg font-semibold text-stone-900 dark:text-white">
-                          {item.title}
-                        </h4>
-                        <p className="text-stone-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
-                          {item.description}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
+        {/* PART 3: Core Values (Full-width Grid) */}
+        <div className="pt-16 border-t border-stone-200 dark:border-gray-800/40 space-y-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center md:text-left"
+          >
+            <span className="text-[10px] uppercase tracking-[0.25em] text-[#C9A86A] font-bold">
+              Philosophy
+            </span>
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-wide mt-1">
+              Core Values
+            </h3>
+          </motion.div>
 
-          {/* Column B: Core Values */}
-          <div className="space-y-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[#C9A86A] font-bold">
-                Philosophy
-              </span>
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-wide mt-1">
-                Core Values
-              </h3>
-            </motion.div>
-            <motion.div 
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: '-100px' }}
-              variants={cardListVariants}
-              className="space-y-4"
-            >
-              {coreValues.map((item, idx) => (
-                <motion.div key={idx} variants={cardItemVariants}>
-                  <Card hoverEffect className="bg-stone-50 dark:bg-[#1A1A1A] border-stone-200 dark:border-[#C9A86A]/5 hover:border-[#C9A86A]/20 transition-all duration-300">
-                    <CardContent className="p-5 flex items-start space-x-4">
-                      <div className="p-2 rounded-lg bg-[#C9A86A]/10 text-[#C9A86A] mt-1 flex-shrink-0">
-                        <ResolveIcon name={item.icon_name} className="h-5 w-5" />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="font-serif text-lg font-semibold text-stone-900 dark:text-white">
-                          {item.title}
-                        </h4>
-                        <p className="text-stone-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
-                          {item.description}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-100px' }}
+            variants={cardListVariants}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {coreValues.map((item, idx) => (
+              <motion.div key={idx} variants={cardItemVariants} className="flex">
+                <Card 
+                  hoverEffect 
+                  className="w-full flex flex-col justify-between bg-stone-50 dark:bg-[#1A1A1A] border-stone-200 dark:border-[#C9A86A]/10 hover:border-[#C9A86A]/30 transition-all duration-300 text-stone-900 dark:text-white"
+                >
+                  <CardContent className="p-6 flex flex-col h-full items-start space-y-4">
+                    <div className="p-3 rounded-lg bg-[#C9A86A]/10 text-[#C9A86A] flex-shrink-0">
+                      <ResolveIcon name={item.icon_name} className="h-6 w-6" />
+                    </div>
+                    <div className="space-y-2 flex-grow flex flex-col justify-start">
+                      <h4 className="font-serif text-lg font-semibold text-stone-900 dark:text-white leading-snug">
+                        {item.title}
+                      </h4>
+                      <p className="text-stone-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
+                        {item.description}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
 
       </div>

@@ -118,7 +118,7 @@ export default async function Home() {
       {/* 5. Custom Design Process Timeline */}
       <DesignProcess steps={steps} />
 
-      {/* 6. Selected Artistry Portfolio Showcase */}
+      {/* 6. Portfolio Showcase */}
       <Portfolio categories={categories} projects={projects} />
 
       {/* FAQ Accordion Section */}

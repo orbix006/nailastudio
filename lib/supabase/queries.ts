@@ -31,11 +31,11 @@ export interface ThemeSettings {
 const DEFAULT_WEBSITE_SETTINGS: WebsiteSettings = {
   company_name: 'The Nailaa Studio',
   company_description: 'Bespoke interior architectures, spatial curation, and high-end residential interior designs by The Nailaa Studio.',
-  contact_phone: '+91 99999 99999',
-  contact_email: 'hello@thenailaastudio.com',
+  contact_phone: '+91 93194 41282',
+  contact_email: 'naila.support@gmail.com',
   business_hours_text: 'Monday – Saturday, 9:00 AM – 7:00 PM',
   business_address: '123 Atelier Boulevard, Colaba, Mumbai, India',
-  whatsapp_number: '+919999999999',
+  whatsapp_number: '+919319441282',
   whatsapp_default_message: "Hello, I'm interested in discussing an interior design project with The Nailaa Studio.",
   google_maps_embed_url: null,
   logo_url: null,
@@ -114,12 +114,12 @@ export async function getWebsiteSettings(): Promise<WebsiteSettings> {
     return {
       company_name: settings.company_name,
       company_description: settings.company_description,
-      contact_phone: settings.contact_phone,
-      contact_email: settings.contact_email,
+      contact_phone: '+91 93194 41282',
+      contact_email: 'naila.support@gmail.com',
       business_hours_text: settings.business_hours_text || DEFAULT_WEBSITE_SETTINGS.business_hours_text,
-      business_address: settings.business_address,
-      whatsapp_number: settings.whatsapp_number,
-      whatsapp_default_message: settings.whatsapp_default_message,
+      business_address: settings.business_address || DEFAULT_WEBSITE_SETTINGS.business_address,
+      whatsapp_number: '+919319441282',
+      whatsapp_default_message: settings.whatsapp_default_message || DEFAULT_WEBSITE_SETTINGS.whatsapp_default_message,
       google_maps_embed_url: settings.google_maps_embed_url,
       logo_url: logoUrl,
       favicon_url: faviconUrl,
@@ -177,11 +177,30 @@ export async function getSocialLinks(): Promise<SocialLink[]> {
       .eq('is_active', true)
       .order('display_order', { ascending: true });
 
-    if (error || !data) {
-      return [];
+    if (error || !data || data.length === 0) {
+      return [
+        { platform: 'instagram', url: 'https://www.instagram.com/the_nailaa_studio?igsh=Z253YmJqNG1nOTIx' },
+        { platform: 'whatsapp', url: 'https://wa.me/919319441282' }
+      ];
     }
 
-    return data as SocialLink[];
+    const mappedSocials = (data as SocialLink[]).map((social) => {
+      if (social.platform === 'instagram') {
+        return {
+          ...social,
+          url: 'https://www.instagram.com/the_nailaa_studio?igsh=Z253YmJqNG1nOTIx',
+        };
+      }
+      if (social.platform === 'whatsapp') {
+        return {
+          ...social,
+          url: 'https://wa.me/919319441282',
+        };
+      }
+      return social;
+    });
+
+    return mappedSocials;
   } catch (err) {
     console.error('Error fetching social links from Supabase:', err);
     return [];
@@ -295,7 +314,7 @@ const DEFAULT_ABOUT_CONTENT: AboutContent = {
   intro_text: 'At The Nailaa Studio, we believe luxury interior design is a narrative of geometry, texture, and light. Sourcing high-grade natural stone, hand-selected finishes, and custom modular solutions, we curate private spaces that reflect personal stories. Our studio balances modern warmth with architectural restraint to create elegant sanctuaries.',
   vision_text: 'Our vision is to shape inspiring environments that enhance everyday living. We value timeless refinement and spatial precision, planning details meticulously to bring balance, functional comfort, and aesthetic integrity to every luxury home or boutique commercial space.',
   mission_text: 'Our mission is to lead a seamless, turnkey design journey. From our initial consultations and 2D zoning layouts to realistic 3D visualizations, sourcing, and on-site styling, we coordinate the entire execution to bring bespoke interiors to life without stress.',
-  intro_image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
+  intro_image_url: 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80',
   vision_image_url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80',
   mission_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
 };
@@ -381,26 +400,29 @@ export interface Service {
 export const DEFAULT_SERVICES: Service[] = [
   {
     id: 'service-1',
-    title: 'Residential Interior Design',
-    slug: 'residential-interior-design',
-    short_description: 'Custom luxury architectural layouts and styling for high-end villas, penthouses, and private estates.',
+    title: 'Residential Interiors',
+    slug: 'residential-interiors',
+    short_description: 'Create elegant, functional, and personalized living spaces that reflect your lifestyle and elevate everyday comfort.',
     detailed_overview: 'We craft hyper-personalized residential properties that reflect your lifestyle, combining architectural rigor with bespoke craftsmanship. From private libraries to grand master suites, each room is designed as an elegant sanctuary of quiet luxury.',
     design_approach: 'Meticulous structural alignment, bespoke lighting design, and material balance to curate timeless living environments.',
     materials_finishes: 'Premium natural stone, custom walnut paneling, hand-cast bronze hardware, and soft boucle textures.',
     cover_image_url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80',
     icon_image_url: null,
     features: [
-      'Tailored Spatial blue-printing mapping everyday rituals',
+      'Tailored spatial blueprinting mapping everyday rituals',
       'Curated furniture and art commissions from global designers',
       'Custom wall paneling and architectural lighting schemes'
     ],
-    gallery_urls: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80']
+    gallery_urls: [
+      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80'
+    ]
   },
   {
     id: 'service-2',
-    title: 'Commercial Interior Design',
-    slug: 'commercial-interior-design',
-    short_description: 'High-end branding integration, layout mapping, and design concepts for luxury hotels, restaurants, and retail spaces.',
+    title: 'Commercial Interiors',
+    slug: 'commercial-interiors',
+    short_description: 'Design inspiring offices, retail stores, cafés, and commercial environments that enhance productivity and customer experience.',
     detailed_overview: 'Elevate your brand presence with immersive, premium spaces that foster connection and engagement. We translate brand identity into physical structures, ensuring optimal utility and aesthetic excellence.',
     design_approach: 'Dynamic traffic flow analysis, acoustic control, and seamless brand-aligned palette integration.',
     materials_finishes: 'Fluted glass facades, matte black steel framing, micro-cement floor systems, and premium leather finishes.',
@@ -411,98 +433,16 @@ export const DEFAULT_SERVICES: Service[] = [
       'Bespoke custom-milled reception and hospitality counters',
       'Advanced acoustic treatments and lighting design integrations'
     ],
-    gallery_urls: ['https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80']
+    gallery_urls: [
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80'
+    ]
   },
   {
     id: 'service-3',
-    title: 'Modular Kitchen Design',
-    slug: 'modular-kitchen-design',
-    short_description: 'Sleek, luxury kitchen architectures combining state-of-the-art appliances with seamless custom millwork.',
-    detailed_overview: 'The kitchen is the heart of the estate. We design modular kitchens that are both culinary workspaces and entertainment hubs, incorporating premium hardware, integrated appliances, and clean lines.',
-    design_approach: 'Ergonomic triangle optimization, concealed push-to-open detailing, and premium task lighting.',
-    materials_finishes: 'Calacatta marble countertops, matte lacquer cabinetry, anti-fingerprint surfaces, and brass detailing.',
-    cover_image_url: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80',
-    icon_image_url: null,
-    features: [
-      'Custom modular layout configurations built to specifications',
-      'Concealed soft-close storage systems and drawer inserts',
-      'Seamless smart kitchen appliance integration systems'
-    ],
-    gallery_urls: ['https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80']
-  },
-  {
-    id: 'service-4',
-    title: 'Living Room Design',
-    slug: 'living-room-design',
-    short_description: 'Refined architectural gathering rooms showcasing custom marble hearths and bespoke lounge furniture configurations.',
-    detailed_overview: 'Make a premium statement. We design grand living spaces that showcase dramatic architectural elements, optimized seating arrangements, and detailed millwork built for hosting and relaxation.',
-    design_approach: 'Symmetry control, natural lighting prioritization, and curated material layering.',
-    materials_finishes: 'Travertine marble, walnut wood wraps, silk-blend area rugs, and brushed bronze metals.',
-    cover_image_url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
-    icon_image_url: null,
-    features: [
-      'Bespoke focal walls with integrated marble hearths',
-      'Curated seating arrangements utilizing artisanal sofas and chairs',
-      'Custom coffered ceiling details and hidden speaker integration'
-    ],
-    gallery_urls: ['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80']
-  },
-  {
-    id: 'service-5',
-    title: 'Bedroom Design',
-    slug: 'bedroom-design',
-    short_description: 'Serene, sophisticated retreats highlighting custom bedscapes, acoustic wraps, and ambient lighting layouts.',
-    detailed_overview: 'Create the ultimate private escape. We structure bedrooms as quiet luxury retreats using plush acoustic paneling, customized walk-in dressing rooms, and lighting calibrated for circadian comfort.',
-    design_approach: 'Soft geometric balancing, textured wall cladding, and indirect warm light zoning.',
-    materials_finishes: 'Imported linen drapery, textured plaster finishes, oak accents, and polished brass fixtures.',
-    cover_image_url: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80',
-    icon_image_url: null,
-    features: [
-      'Tailored master suites with integrated walk-in wardrobe designs',
-      'Multi-tiered smart lighting presets for daytime and rest modes',
-      'Acoustic wall paneling and customized sound-dampening panels'
-    ],
-    gallery_urls: ['https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80']
-  },
-  {
-    id: 'service-6',
-    title: 'Office Interiors',
-    slug: 'office-interiors',
-    short_description: 'Sophisticated corporate layouts and private executive suites designed to improve productivity and collaboration.',
-    detailed_overview: 'Work in absolute refinement. We configure workspaces that balance productivity with corporate elegance, integrating premium office systems with comfortable lounge seating.',
-    design_approach: 'Ergonomic alignment, cable-free detailing, and balanced task-ambient illumination.',
-    materials_finishes: 'Walnut desks, leather task chairs, acoustic glass wall panels, and brushed aluminum frames.',
-    cover_image_url: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
-    icon_image_url: null,
-    features: [
-      'Custom millwork desks with integrated wire-routing systems',
-      'Private acoustic call capsules and meeting room fit-outs',
-      'Circadian-supportive LED ambient lighting fixtures'
-    ],
-    gallery_urls: ['https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80']
-  },
-  {
-    id: 'service-7',
-    title: 'Space Planning',
-    slug: 'space-planning',
-    short_description: 'Expert spatial blueprints, furniture layouts, and movement path mapping to optimize every square foot.',
-    detailed_overview: 'A great space starts with a perfect layout. We draft precision architectural zoning layouts that maximize utility, view vectors, and movement paths before selecting any colors or furniture.',
-    design_approach: 'Scale analysis, dynamic movement simulations, and sight-line balancing.',
-    materials_finishes: 'Drafted architectural sheets, 2D vector layouts, and scaled material mood boards.',
-    cover_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
-    icon_image_url: null,
-    features: [
-      'Multiple 2D scaled spatial layout options for review',
-      'Sight-line analysis mapping exterior and interior views',
-      'Zoning layouts ensuring proper flow and ergonomic clearance'
-    ],
-    gallery_urls: ['https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80']
-  },
-  {
-    id: 'service-8',
-    title: 'Turnkey Interior Solutions',
-    slug: 'turnkey-interior-solutions',
-    short_description: 'End-to-end design, construction management, material sourcing, and styling services for a stress-free handover.',
+    title: 'Turnkey Interiors',
+    slug: 'turnkey-interiors',
+    short_description: 'End-to-end interior solutions from concept to execution, delivering beautifully finished spaces without the hassle.',
     detailed_overview: 'A complete hassle-free luxury design experience. We manage everything—from licensing and material imports to builder supervision and site styling—handing over your keys when your home is fully completed.',
     design_approach: 'Unified project management, strict schedule control, and detail supervision.',
     materials_finishes: 'Comprehensive architectural fit-outs, imported custom accents, and fully styled installations.',
@@ -513,30 +453,16 @@ export const DEFAULT_SERVICES: Service[] = [
       'Rigorous material quality check and factory inspection',
       'Final styling down to curated bookshelf art and accent florals'
     ],
-    gallery_urls: ['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80']
+    gallery_urls: [
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80'
+    ]
   },
   {
-    id: 'service-9',
-    title: 'Furniture & Decor Styling',
-    slug: 'furniture-decor-styling',
-    short_description: 'Curating custom furniture configurations, artisanal ornaments, rugs, and decorative details.',
-    detailed_overview: 'The final layer of luxury. We handpick bespoke furniture from international studios, style bookshelves, position lighting arrays, and align textiles to bring elegant unity to your architecture.',
-    design_approach: 'Color balancing, proportion scale mapping, and custom craftsmanship sourcing.',
-    materials_finishes: 'Boucle fabrics, premium brushed brass details, curated designer ceramics, and silk wool carpets.',
-    cover_image_url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80',
-    icon_image_url: null,
-    features: [
-      'Curated furniture procurement lists and manufacturer coordination',
-      'Art advisory, collection sourcing, and framing guidelines',
-      'Detailed site styling for tables, shelving, and soft layouts'
-    ],
-    gallery_urls: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80']
-  },
-  {
-    id: 'service-10',
-    title: '3D Design Visualization',
+    id: 'service-4',
+    title: '3D Design & Visualization',
     slug: '3d-design-visualization',
-    short_description: 'Photorealistic 3D visual renderings and virtual walkthroughs of your planned space.',
+    short_description: 'Visualize your dream space before execution with realistic 3D renders, layouts, and design presentations.',
     detailed_overview: 'See your dream space before a single brick is laid. We create high-fidelity, photorealistic 3D renders with exact material textures, lighting states, and furniture layouts for complete clarity.',
     design_approach: 'Accurate architectural scale rendering, light bounce calculations, and detail texturing.',
     materials_finishes: 'High-resolution digital renders, VR panoramic exports, and video walkthrough animations.',
@@ -547,7 +473,50 @@ export const DEFAULT_SERVICES: Service[] = [
       'Virtual reality walkthrough files for immersive reviews',
       'Accurate lighting simulation matching dawn, noon, and night'
     ],
-    gallery_urls: ['https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80']
+    gallery_urls: [
+      'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80'
+    ]
+  },
+  {
+    id: 'service-5',
+    title: 'Space Planning',
+    slug: 'space-planning',
+    short_description: 'Optimize every square foot with intelligent layouts that maximize functionality, circulation, and aesthetics.',
+    detailed_overview: 'A great space starts with a perfect layout. We draft precision architectural zoning layouts that maximize utility, view vectors, and movement paths before selecting any colors or furniture.',
+    design_approach: 'Scale analysis, dynamic movement simulations, and sight-line balancing.',
+    materials_finishes: 'Drafted architectural sheets, 2D vector layouts, and scaled material mood boards.',
+    cover_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'Multiple 2D scaled spatial layout options for review',
+      'Sight-line analysis mapping exterior and interior views',
+      'Zoning layouts ensuring proper flow and ergonomic clearance'
+    ],
+    gallery_urls: [
+      'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80'
+    ]
+  },
+  {
+    id: 'service-6',
+    title: 'Site Execution & Supervision',
+    slug: 'site-execution-supervision',
+    short_description: 'Ensure flawless execution through professional project management, quality checks, vendor coordination, and on-site supervision.',
+    detailed_overview: 'We translate design blueprints into physically flawless realities. From core brickwork, electrical integration, custom carpentry fittings to final paint styling, we supervise on-site teams to ensure absolute precision.',
+    design_approach: 'Daily vendor progress checklists, on-site tolerance gap inspections, and strict timeline adherence.',
+    materials_finishes: 'Architectural structural checks, quality-controlled paint layerings, and custom millwork alignments.',
+    cover_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+    icon_image_url: null,
+    features: [
+      'On-site project managers supervising construction milestones',
+      'Vendor coordination and material delivery gate check gates',
+      'Snagging review inspections prior to final key handover'
+    ],
+    gallery_urls: [
+      'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80'
+    ]
   }
 ];
 
@@ -911,12 +880,12 @@ export interface Testimonial {
 }
 
 const DEFAULT_DESIGN_PROCESS: DesignProcessStep[] = [
-  { step_number: 1, title: 'Discovery', description: 'We conduct an in-depth spatial consult, understanding your aesthetic preferences, style directives, and functional requirements.' },
+  { step_number: 1, title: 'Discovery & Consultation', description: 'We conduct an in-depth spatial consult, understanding your aesthetic preferences, style directives, and functional requirements.' },
   { step_number: 2, title: 'Concept Development', description: 'We develop custom conceptual layouts, selecting primary textures, accent finishes, and bespoke furniture frameworks.' },
   { step_number: 3, title: 'Space Planning', description: 'We outline precise spatial blueprints, dynamic movement vectors, and floor layout configurations.' },
   { step_number: 4, title: '3D Visualization', description: 'We generate photorealistic 3D visual renderings, simulating daylight variations and material intersections.' },
-  { step_number: 5, title: 'Execution', description: 'We supervise on-site construction fit-outs, millwork milling, material check gates, and fittings.' },
-  { step_number: 6, title: 'Final Styling', description: 'We place final styling accessories, curate rugs and decorative objects, and hand over your ready keys.' }
+  { step_number: 5, title: 'Execution & Supervision', description: 'We supervise on-site construction fit-outs, millwork milling, material check gates, and fittings.' },
+  { step_number: 6, title: 'Final Styling & Handover', description: 'We place final styling accessories, curate rugs and decorative objects, and hand over your ready keys.' }
 ];
 
 const DEFAULT_WHY_CHOOSE_US: WhyChooseUsItem[] = [

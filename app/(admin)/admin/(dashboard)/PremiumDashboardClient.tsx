@@ -5,6 +5,7 @@ import {
   Inbox, Shield, Calendar, DollarSign, TrendingUp, 
   BarChart3, Clock, Briefcase, MessageSquare, Eye 
 } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 interface AuditLogItem {
   id: string;
@@ -352,7 +353,12 @@ export function PremiumDashboardClient({
           </h3>
 
           {auditLogs.length === 0 ? (
-            <p className="text-xs text-gray-550 italic py-6 text-center">No system operations tracked yet.</p>
+            <EmptyState
+              icon="dashboard"
+              title="No data available"
+              description="No curator operations or system activity records were logged yet."
+              className="border-0 bg-transparent py-4"
+            />
           ) : (
             <div className="relative border-l border-gray-850 ml-3 pl-6 space-y-4 py-1.5 max-h-[300px] overflow-y-auto pr-1">
               {auditLogs.map((log) => {
@@ -379,7 +385,12 @@ export function PremiumDashboardClient({
           </h3>
 
           {upcomingMeetings.length === 0 ? (
-            <p className="text-xs text-gray-550 italic py-10 text-center">No upcoming appointments scheduled.</p>
+            <EmptyState
+              icon="analytics"
+              title="No upcoming meetings"
+              description="No client consultations or styling slot bookings scheduled."
+              className="border-0 bg-transparent py-4"
+            />
           ) : (
             <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
               {upcomingMeetings.map((mtg) => (
@@ -410,7 +421,12 @@ export function PremiumDashboardClient({
           </h3>
 
           {popularProjects.length === 0 ? (
-            <p className="text-xs text-gray-550 italic py-6 text-center">No project views logged yet.</p>
+            <EmptyState
+              icon="portfolio"
+              title="No data available"
+              description="No project portfolio page views have been tracked yet."
+              className="border-0 bg-transparent py-4"
+            />
           ) : (
             <div className="space-y-3.5">
               {popularProjects.map((p, idx) => (
@@ -435,7 +451,12 @@ export function PremiumDashboardClient({
           </h3>
 
           {recentMessages.length === 0 ? (
-            <p className="text-xs text-gray-555 italic py-6 text-center">No message logs found.</p>
+            <EmptyState
+              icon="leads"
+              title="No data available"
+              description="No recent client message logs found in the inbox."
+              className="border-0 bg-transparent py-4"
+            />
           ) : (
             <div className="space-y-3">
               {recentMessages.map((msg) => (

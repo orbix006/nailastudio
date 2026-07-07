@@ -154,14 +154,14 @@
   "progress_images": [
     {
       "id": "img-1",
-      "title": "Phase 1: Shape Blueprinting",
-      "url": "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=500",
+      "title": "Phase 1: Space Planning Blueprint",
+      "url": "https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&q=80&w=500",
       "date": "2026-06-11"
     },
     {
       "id": "img-2",
-      "title": "Phase 2: Custom Gel Base Layering",
-      "url": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=500",
+      "title": "Phase 2: Material Board Selection",
+      "url": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&q=80&w=500",
       "date": "2026-06-24"
     }
   ]

@@ -145,7 +145,7 @@ export function PdfGeneratorClient({ initialTemplates }: PdfGeneratorClientProps
       doc.setFontSize(8);
       doc.setTextColor(120, 120, 120);
       doc.text('Luxury Nail Artistry & Holistic Hand Wellness', 20, 25);
-      doc.text('hello@thenailaastudio.com | +91 99999 99999', 20, 29);
+      doc.text('naila.support@gmail.com | +91 93194 41282', 20, 29);
 
       // Accent border line
       doc.setDrawColor(primaryColor);
@@ -549,7 +549,7 @@ export function PdfGeneratorClient({ initialTemplates }: PdfGeneratorClientProps
                         THE NAILAA STUDIO
                       </h2>
                       <p className="text-[10px] text-gray-450 mt-0.5 uppercase tracking-widest font-semibold">Luxury Nail Styling Sanctuary</p>
-                      <p className="text-[9px] text-gray-400 mt-1 font-mono">hello@thenailaastudio.com • +91 99999 99999</p>
+                      <p className="text-[9px] text-gray-400 mt-1 font-mono">naila.support@gmail.com • +91 93194 41282</p>
                     </div>
 
                     <div className="text-right">

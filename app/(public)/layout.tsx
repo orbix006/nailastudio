@@ -27,10 +27,6 @@ const ConsultationPopup = nextDynamic(
   () => import('@/components/public/ConsultationPopup').then((mod) => mod.ConsultationPopup)
 );
 
-const AiAssistant = nextDynamic(
-  () => import('@/components/public/AiAssistant').then((mod) => mod.AiAssistant)
-);
-
 export default async function PublicLayout({
   children,
 }: {
@@ -157,9 +153,6 @@ export default async function PublicLayout({
 
       {/* Database-Driven Consultation Popup */}
       <ConsultationPopup settings={popupSettings} projectTypes={projectTypes} />
-
-      {/* Floating AI Consultation Assistant */}
-      <AiAssistant services={services} projects={projects} projectTypes={projectTypes} />
     </div>
   );
 }

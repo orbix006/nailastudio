@@ -247,7 +247,7 @@ export function BookingClient({ projectTypes }: BookingClientProps) {
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+919999999999"
+                    placeholder="+919319441282"
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-850 bg-[#111111] text-sm text-white placeholder-gray-600 outline-none focus:border-[#C9A86A] transition-all"
                   />
                 </div>

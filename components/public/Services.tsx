@@ -3,8 +3,29 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, ArrowRight, Sparkles, Paintbrush, Layers } from 'lucide-react';
+import { Check, ArrowRight, Sparkles, Paintbrush, Layers, Home, Building2, KeyRound, Eye, Compass, ClipboardCheck } from 'lucide-react';
 import { Service } from '@/lib/supabase/queries';
+import { EmptyState } from '@/components/ui/EmptyState';
+
+function ServiceIcon({ slug, className }: { slug: string; className?: string }) {
+  const cn = className || '';
+  switch (slug) {
+    case 'residential-interiors':
+      return <Home className={cn} />;
+    case 'commercial-interiors':
+      return <Building2 className={cn} />;
+    case 'turnkey-interiors':
+      return <KeyRound className={cn} />;
+    case '3d-design-visualization':
+      return <Eye className={cn} />;
+    case 'space-planning':
+      return <Compass className={cn} />;
+    case 'site-execution-supervision':
+      return <ClipboardCheck className={cn} />;
+    default:
+      return <Sparkles className={cn} />;
+  }
+}
 import {
   Card,
   CardHeader,
@@ -91,13 +112,20 @@ export function Services({ services }: ServicesProps) {
         </div>
 
         {/* Responsive Cards Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+        {services.length === 0 ? (
+          <EmptyState
+            icon="services"
+            title="No Services Available"
+            description="Our luxury service portfolio is currently being tailored. Please check back shortly for our updated design offerings."
+          />
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-100px' }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
           {services.map((service) => (
             <motion.div key={service.id} variants={cardVariants} className="flex">
               <Card
@@ -123,10 +151,13 @@ export function Services({ services }: ServicesProps) {
                 </div>
 
                 <CardHeader className="pb-3 flex-grow">
-                  <div className="flex items-center space-x-2 mb-2">
+                  <div className="flex items-center justify-between mb-2">
                     <Badge variant="accent" className="text-[10px] tracking-widest font-bold">
                       LUXURY
                     </Badge>
+                    <div className="text-[#C9A86A] p-1.5 rounded-lg bg-[#C9A86A]/10 flex-shrink-0 transition-transform duration-350 group-hover:scale-110">
+                      <ServiceIcon slug={service.slug} className="h-4 w-4" />
+                    </div>
                   </div>
                   <CardTitle className="text-xl sm:text-2xl font-serif text-stone-900 dark:text-white group-hover:text-[#C9A86A] transition-colors">
                     {service.title}
@@ -136,17 +167,7 @@ export function Services({ services }: ServicesProps) {
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="pb-4 pt-0">
-                  {/* Miniature features bullets list */}
-                  <ul className="space-y-2 text-xs text-gray-400">
-                    {service.features.slice(0, 3).map((feat, idx) => (
-                      <li key={idx} className="flex items-center space-x-2">
-                        <Check className="h-3 w-3 text-[#C9A86A] flex-shrink-0" aria-hidden="true" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
+
 
                 <CardFooter className="pt-0 border-t border-transparent">
                   <Button
@@ -161,8 +182,9 @@ export function Services({ services }: ServicesProps) {
                 </CardFooter>
               </Card>
             </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
 
       {/* Detailed Modal Window (Overlay dialog) */}
@@ -251,7 +273,7 @@ export function Services({ services }: ServicesProps) {
                 {/* Overview Description */}
                 <div>
                   <h4 className="text-[10px] uppercase tracking-[0.2em] text-[#C9A86A] font-semibold mb-1 flex items-center space-x-1.5">
-                    <Sparkles className="h-3 w-3" />
+                    <ServiceIcon slug={selectedService.slug} className="h-3.5 w-3.5" />
                     <span>Overview</span>
                   </h4>
                   <p className="text-gray-300 text-sm leading-relaxed font-light">

@@ -11,6 +11,7 @@ import {
   Calendar, User, ArrowLeft, ArrowRight, Clock
 } from 'lucide-react';
 import { logAdminAction } from '@/lib/supabase/audit';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 interface InquiryRow {
   id: string;
@@ -671,8 +672,15 @@ export default function LeadsCRMPage() {
                 </tr>
               ) : paginatedInquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-16 text-center text-gray-500 font-sans italic">
-                    No inquiries match current search criteria.
+                  <td colSpan={7} className="py-12">
+                    <EmptyState
+                      icon="leads"
+                      title={inquiries.length === 0 ? "No submissions yet." : "No matching results found."}
+                      description={inquiries.length === 0 
+                        ? "You haven't received any client inquiries or consultation bookings yet."
+                        : "No inquiries match your selected search terms or pipeline stage filters."
+                      }
+                    />
                   </td>
                 </tr>
               ) : (

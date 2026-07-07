@@ -73,6 +73,7 @@ export function Hero({ settings }: HeroProps) {
 
   return (
     <div
+      id="hero"
       ref={containerRef}
       className="relative w-full h-screen overflow-hidden bg-[#111111] flex items-center justify-center font-sans text-white"
     >

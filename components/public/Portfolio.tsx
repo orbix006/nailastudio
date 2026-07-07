@@ -4,11 +4,12 @@ import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Focus, ChevronLeft, ChevronRight, X, Calendar, MapPin, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { PortfolioCategory, PortfolioProject } from '@/lib/supabase/queries';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 interface PortfolioProps {
   categories: PortfolioCategory[];
@@ -133,7 +134,7 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
             Bespoke Interior Curation
           </span>
           <h2 id="portfolio-heading" className="font-serif text-3xl sm:text-5xl font-bold tracking-wide mt-2">
-            Selected Artistry
+            Portfolio
           </h2>
           <div className="h-[1px] w-24 bg-[#8A7052] mx-auto mt-4" aria-hidden="true" />
         </div>
@@ -186,14 +187,26 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
         </div>
 
         {/* Dynamic Grid Layout */}
-        <motion.div
-          layout
-          id="portfolio-grid"
-          role="region"
-          aria-live="polite"
-          aria-label="Filtered portfolio projects"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
+        {filteredProjects.length === 0 ? (
+          <div className="py-12 w-full">
+            <EmptyState
+              icon={projects.length === 0 ? "portfolio" : "search"}
+              title={projects.length === 0 ? "No projects available at the moment." : "No matching results found."}
+              description={projects.length === 0 
+                ? "Our design team is preparing our newest luxury interior case studies. Please stay tuned."
+                : "No projects match the selected styling category. Try selecting another design tab above."
+              }
+            />
+          </div>
+        ) : (
+          <motion.div
+            layout
+            id="portfolio-grid"
+            role="region"
+            aria-live="polite"
+            aria-label="Filtered portfolio projects"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
               <motion.button
@@ -239,16 +252,13 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
                       ))}
                     </div>
 
-                    <div className="flex items-center space-x-2 pt-2 text-[10px] uppercase font-bold tracking-widest text-[#C9A86A] opacity-90 group-hover:opacity-100">
-                      <span>View Gallery</span>
-                      <Focus className="h-3 w-3" aria-hidden="true" />
-                    </div>
                   </div>
                 </div>
               </motion.button>
             ))}
-          </AnimatePresence>
-        </motion.div>
+            </AnimatePresence>
+          </motion.div>
+        )}
       </div>
 
       {/* Lightbox / Gallery Modal Overlay */}

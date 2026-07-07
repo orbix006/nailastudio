@@ -1,10 +1,32 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Compass, Palette, LayoutGrid, Eye, Hammer, KeyRound, HelpCircle } from 'lucide-react';
 import { DesignProcessStep } from '@/lib/supabase/queries';
+import { Card, CardContent } from '@/components/ui/Card';
 
 interface DesignProcessProps {
   steps: DesignProcessStep[];
+}
+
+function StepIcon({ stepNumber, className }: { stepNumber: number; className?: string }) {
+  const cn = className || '';
+  switch (stepNumber) {
+    case 1:
+      return <Compass className={cn} />;
+    case 2:
+      return <Palette className={cn} />;
+    case 3:
+      return <LayoutGrid className={cn} />;
+    case 4:
+      return <Eye className={cn} />;
+    case 5:
+      return <Hammer className={cn} />;
+    case 6:
+      return <KeyRound className={cn} />;
+    default:
+      return <HelpCircle className={cn} />;
+  }
 }
 
 export function DesignProcess({ steps }: DesignProcessProps) {
@@ -13,7 +35,7 @@ export function DesignProcess({ steps }: DesignProcessProps) {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.12,
       },
     },
   };
@@ -58,34 +80,50 @@ export function DesignProcess({ steps }: DesignProcessProps) {
           whileInView="show"
           viewport={{ once: true, margin: '-100px' }}
           variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-12 relative"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-12"
         >
-          {steps.map((step, idx) => (
-            <motion.div
-              key={step.step_number ?? idx}
-              variants={itemVariants}
-              className="flex flex-col items-center text-center space-y-4 group relative"
-            >
-              {/* Step Number Circle */}
-              <div className="w-16 h-16 rounded-full border border-[#C9A86A]/30 flex items-center justify-center bg-white dark:bg-[#171717] group-hover:border-[#C9A86A] group-hover:bg-[#C9A86A]/10 transition-all duration-300 relative z-10">
-                <span className="font-serif text-xl font-bold text-[#C9A86A]">
-                  0{step.step_number}
-                </span>
-              </div>
+          {steps.map((step, idx) => {
+            const stepNum = step.step_number || (idx + 1);
+            return (
+              <motion.div
+                key={stepNum}
+                variants={itemVariants}
+                className="flex group"
+              >
+                <Card 
+                  hoverEffect
+                  className="w-full relative overflow-hidden bg-white/40 dark:bg-[#1A1A1A]/40 backdrop-blur-sm border-stone-200/85 dark:border-[#C9A86A]/10 hover:border-[#C9A86A]/30 transition-all duration-500 text-stone-900 dark:text-white"
+                >
+                  {/* Large background watermarked number */}
+                  <div className="absolute top-4 right-6 text-5xl sm:text-6xl font-serif font-black text-stone-200/40 dark:text-[#C9A86A]/5 select-none pointer-events-none transition-transform duration-500 group-hover:scale-105">
+                    0{stepNum}
+                  </div>
 
-              {/* Connecting line for desktop */}
-              {idx < steps.length - 1 && (
-                <div className="hidden md:block absolute top-8 left-[60%] w-full h-[1px] bg-gradient-to-r from-[#C9A86A]/20 to-transparent z-0 pointer-events-none" />
-              )}
+                  <CardContent className="p-8 sm:p-10 flex flex-col h-full items-center text-center justify-start space-y-4">
+                    {/* Icon Container */}
+                    <div className="w-14 h-14 rounded-full bg-[#C9A86A]/10 text-[#C9A86A] border border-[#C9A86A]/20 flex items-center justify-center flex-shrink-0 transition-all duration-350 group-hover:bg-[#C9A86A]/20 group-hover:scale-110">
+                      <StepIcon stepNumber={stepNum} className="h-6 w-6" />
+                    </div>
 
-              <h3 className="font-serif text-xl font-semibold text-stone-900 dark:text-white tracking-wide pt-2">
-                {step.title}
-              </h3>
-              <p className="text-stone-600 dark:text-gray-400 text-sm leading-relaxed font-light max-w-xs">
-                {step.description}
-              </p>
-            </motion.div>
-          ))}
+                    {/* Step Label */}
+                    <span className="text-[10px] tracking-[0.25em] text-[#C9A86A] font-bold uppercase block">
+                      Phase 0{stepNum}
+                    </span>
+
+                    {/* Title & Description */}
+                    <div className="space-y-2 flex-grow flex flex-col justify-start items-center">
+                      <h3 className="font-serif text-xl font-bold text-stone-900 dark:text-white tracking-wide group-hover:text-[#C9A86A] transition-colors leading-snug">
+                        {step.title}
+                      </h3>
+                      <p className="text-stone-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed font-light">
+                        {step.description}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
       </div>

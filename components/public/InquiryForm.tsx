@@ -167,7 +167,7 @@ export function InquiryForm({
         <Input
           label="Telephone"
           type="tel"
-          placeholder="+91 9999999999"
+          placeholder="+91 93194 41282"
           required
           error={errors.phone_number?.message}
           {...register('phone_number')}

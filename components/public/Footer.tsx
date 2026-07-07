@@ -136,10 +136,15 @@ export function Footer({
           </h3>
           <div className="space-y-4 text-sm">
             {address && (
-              <div className="flex items-start space-x-3">
+              <a
+                href="https://maps.app.goo.gl/2FxF3qqEpd8y28Ms9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start space-x-3 hover:text-[#C9A86A] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] rounded px-1 group"
+              >
                 <MapPin className="h-5 w-5 text-[#8A7052] flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <span className="leading-relaxed">{address}</span>
-              </div>
+              </a>
             )}
             <div className="flex items-center space-x-3">
               <Phone className="h-5 w-5 text-[#8A7052] flex-shrink-0" aria-hidden="true" />
