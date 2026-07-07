@@ -355,3 +355,100 @@ export async function saveAiConversationAction(payload: {
     return { error: err.message || 'An unexpected error occurred.' };
   }
 }
+
+export async function signUpAction(formData: FormData) {
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const fullName = formData.get('fullName') as string;
+  const phoneNumber = formData.get('phoneNumber') as string || null;
+
+  if (!email || !password || !fullName) {
+    return { error: 'Full name, email, and password are required.' };
+  }
+
+  const supabase = await createClient();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: fullName,
+        phone_number: phoneNumber,
+      },
+      emailRedirectTo: `${siteUrl}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { 
+    success: true, 
+    email: data.user?.email || email,
+    sessionActive: !!data.session 
+  };
+}
+
+export async function forgotPasswordAction(formData: FormData) {
+  const email = formData.get('email') as string;
+  if (!email) {
+    return { error: 'Email is required.' };
+  }
+
+  const supabase = await createClient();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${siteUrl}/reset-password`,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function resetPasswordAction(formData: FormData) {
+  const password = formData.get('password') as string;
+  if (!password) {
+    return { error: 'New password is required.' };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    password: password,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function resendVerificationAction(email: string) {
+  if (!email) {
+    return { error: 'Email is required.' };
+  }
+
+  const supabase = await createClient();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: {
+      emailRedirectTo: `${siteUrl}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true };
+}

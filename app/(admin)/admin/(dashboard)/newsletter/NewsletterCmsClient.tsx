@@ -25,7 +25,7 @@ const DEFAULT_NEW_CAMPAIGN = (): Campaign => ({
 });
 
 export function NewsletterCmsClient({ initialSubscribers, initialCampaigns }: NewsletterCmsClientProps) {
-  const [subscribers, setSubscribers] = React.useState<Subscriber[]>(initialSubscribers);
+  const [subscribers] = React.useState<Subscriber[]>(initialSubscribers);
   const [campaigns, setCampaigns] = React.useState<Campaign[]>(initialCampaigns);
   const [selectedCampaign, setSelectedCampaign] = React.useState<Campaign | null>(null);
 

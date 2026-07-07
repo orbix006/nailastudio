@@ -316,7 +316,7 @@ const DEFAULT_ABOUT_CONTENT: AboutContent = {
   mission_text: 'Our mission is to lead a seamless, turnkey design journey. From our initial consultations and 2D zoning layouts to realistic 3D visualizations, sourcing, and on-site styling, we coordinate the entire execution to bring bespoke interiors to life without stress.',
   intro_image_url: 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80',
   vision_image_url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80',
-  mission_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+  mission_image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80',
 };
 
 export async function getAboutContent(): Promise<AboutContent> {
@@ -475,7 +475,7 @@ export const DEFAULT_SERVICES: Service[] = [
     ],
     gallery_urls: [
       'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80'
     ]
   },
   {
@@ -486,7 +486,7 @@ export const DEFAULT_SERVICES: Service[] = [
     detailed_overview: 'A great space starts with a perfect layout. We draft precision architectural zoning layouts that maximize utility, view vectors, and movement paths before selecting any colors or furniture.',
     design_approach: 'Scale analysis, dynamic movement simulations, and sight-line balancing.',
     materials_finishes: 'Drafted architectural sheets, 2D vector layouts, and scaled material mood boards.',
-    cover_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
     icon_image_url: null,
     features: [
       'Multiple 2D scaled spatial layout options for review',
@@ -494,7 +494,7 @@ export const DEFAULT_SERVICES: Service[] = [
       'Zoning layouts ensuring proper flow and ergonomic clearance'
     ],
     gallery_urls: [
-      'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=800&q=80'
     ]
   },
@@ -506,7 +506,7 @@ export const DEFAULT_SERVICES: Service[] = [
     detailed_overview: 'We translate design blueprints into physically flawless realities. From core brickwork, electrical integration, custom carpentry fittings to final paint styling, we supervise on-site teams to ensure absolute precision.',
     design_approach: 'Daily vendor progress checklists, on-site tolerance gap inspections, and strict timeline adherence.',
     materials_finishes: 'Architectural structural checks, quality-controlled paint layerings, and custom millwork alignments.',
-    cover_image_url: 'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
     icon_image_url: null,
     features: [
       'On-site project managers supervising construction milestones',
@@ -514,7 +514,7 @@ export const DEFAULT_SERVICES: Service[] = [
       'Snagging review inspections prior to final key handover'
     ],
     gallery_urls: [
-      'https://images.unsplash.com/photo-1503387762-592dedb8227b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80'
     ]
   }

@@ -8,8 +8,6 @@ import {
   getCachedConsultationPopupSettings,
   getCachedThemeSettings,
   getCachedSiteCacheVersion,
-  getCachedServices,
-  getCachedPortfolioProjects,
 } from '@/lib/supabase/cached-queries';
 import { Header } from '@/components/public/Header';
 import { Footer } from '@/components/public/Footer';
@@ -36,14 +34,12 @@ export default async function PublicLayout({
   const version = await getCachedSiteCacheVersion();
 
   // Parallel fetch all layout data
-  const [settings, socials, projectTypes, popupSettings, theme, services, projects] = await Promise.all([
+  const [settings, socials, projectTypes, popupSettings, theme] = await Promise.all([
     getCachedWebsiteSettings(version),
     getCachedSocialLinks(version),
     getCachedProjectTypes(version),
     getCachedConsultationPopupSettings(version),
     getCachedThemeSettings(version),
-    getCachedServices(version),
-    getCachedPortfolioProjects(version),
   ]);
 
   const whatsappLink = settings.whatsapp_number

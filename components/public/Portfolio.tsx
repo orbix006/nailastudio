@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
+import { SafeImage } from '@/components/ui/SafeImage';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, Calendar, MapPin, ArrowRight } from 'lucide-react';
@@ -221,7 +221,7 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
                 onClick={() => handleOpenProject(project)}
               >
                 {/* Cover Image */}
-                <Image
+                <SafeImage
                   src={project.cover_image_url}
                   alt={`${project.name} preview`}
                   fill
@@ -297,7 +297,7 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
               <div className="relative w-full aspect-[4/3] max-h-[70vh] rounded-lg overflow-hidden bg-black flex items-center justify-center border border-white/5">
                 
                 {/* Active Image */}
-                <Image
+                <SafeImage
                   src={projectImages[activeImageIdx]}
                   alt={`${selectedProject.name} image ${activeImageIdx + 1} of ${projectImages.length}`}
                   fill
@@ -383,7 +383,7 @@ export function Portfolio({ categories, projects }: PortfolioProps) {
                           : 'border-transparent opacity-50 hover:opacity-100'
                       )}
                     >
-                      <Image src={img} alt={`Gallery thumbnail ${idx + 1}`} fill sizes="64px" className="object-cover" />
+                      <SafeImage src={img} alt={`Gallery thumbnail ${idx + 1}`} fill sizes="64px" className="object-cover" />
                     </button>
                   ))}
                 </div>

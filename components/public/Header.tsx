@@ -9,6 +9,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { Drawer } from '@/components/ui/Drawer';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
 
 interface HeaderProps {
   companyName: string;
@@ -37,12 +38,38 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const [isAdmin, setIsAdmin] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from('admin_profiles')
+            .select('is_active, role')
+            .eq('id', user.id)
+            .maybeSingle();
+          if (profile?.is_active === true && (profile.role === 'admin' || profile.role === 'superadmin')) {
+            setIsAdmin(true);
+          }
+        }
+      } catch (err) {
+        console.error('Error checking admin status in header:', err);
+      }
+    };
+    checkAdmin();
+  }, []);
+
   const navLinks = [
     { href: '/#hero', label: 'Home' },
     { href: '/#about', label: 'About' },
     { href: '/#services', label: 'Services' },
     { href: '/#portfolio', label: 'Portfolio' },
+    { href: '/blog', label: 'Blog' },
     { href: '/#contact', label: 'Contact' },
+    ...(isAdmin ? [{ href: '/admin', label: 'Admin Panel' }] : []),
   ];
 
   const [activeHash, setActiveHash] = React.useState('');
@@ -55,6 +82,43 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  React.useEffect(() => {
+    if (pathname !== '/') {
+      setActiveHash('');
+      return;
+    }
+
+    const sections = ['hero', 'about', 'services', 'portfolio', 'contact'];
+    const observerOptions = {
+      root: null,
+      rootMargin: '-30% 0px -45% 0px',
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          setActiveHash(id === 'hero' ? '' : '#' + id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.unobserve(el);
+      });
+    };
+  }, [pathname]);
 
   React.useEffect(() => {
     if (window.location.hash) {
@@ -131,11 +195,14 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => {
-              const [, linkHash] = link.href.split('#');
-              const isLinkHome = link.href === '/#hero' || link.href === '/';
-              const isActive = pathname === '/' 
-                ? (isLinkHome ? (activeHash === '' || activeHash === '#hero') : activeHash === `#${linkHash}`)
-                : false;
+              const isBlog = link.href === '/blog';
+              const isActive = isBlog
+                ? (pathname === '/blog' || pathname.startsWith('/blog/'))
+                : (pathname === '/' && (
+                    link.href === '/#hero'
+                      ? (activeHash === '' || activeHash === '#hero')
+                      : activeHash === link.href.substring(1)
+                  ));
               return (
                 <Link
                   key={link.href}
@@ -210,11 +277,14 @@ export function Header({ companyName, logoUrl, contactPhone }: HeaderProps) {
       >
         <div className="flex flex-col space-y-6 pt-4">
           {navLinks.map((link) => {
-            const [, linkHash] = link.href.split('#');
-            const isLinkHome = link.href === '/#hero' || link.href === '/';
-            const isActive = pathname === '/' 
-              ? (isLinkHome ? (activeHash === '' || activeHash === '#hero') : activeHash === `#${linkHash}`)
-              : false;
+            const isBlog = link.href === '/blog';
+            const isActive = isBlog
+              ? (pathname === '/blog' || pathname.startsWith('/blog/'))
+              : (pathname === '/' && (
+                  link.href === '/#hero'
+                    ? (activeHash === '' || activeHash === '#hero')
+                    : activeHash === link.href.substring(1)
+                ));
             return (
               <Link
                 key={link.href}

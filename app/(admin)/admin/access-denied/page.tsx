@@ -1,35 +1,48 @@
-import { signOutAction } from '@/lib/supabase/actions';
+import Link from 'next/link';
 import { ShieldAlert } from 'lucide-react';
+import { createClient } from '@/lib/supabase/server';
+import { Button } from '@/components/ui/Button';
 
-export default function AccessDeniedPage() {
+export default async function AccessDeniedPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#111111] p-6 text-white font-sans">
-      <div className="w-full max-w-md rounded-xl border border-red-500/20 bg-[#1e1e1e] p-8 shadow-2xl text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-red-500 mb-6">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#111111] p-6 text-white font-sans selection:bg-[#C9A86A]/30 select-none">
+      <div className="w-full max-w-md rounded-xl border border-[#C9A86A]/20 bg-[#1A1A1A] p-8 shadow-2xl text-center space-y-6">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#C9A86A]/10 text-[#C9A86A] transition-transform duration-350 hover:scale-105">
           <ShieldAlert className="h-8 w-8" />
         </div>
         
-        <h1 className="font-serif text-3xl font-bold tracking-wide text-red-500 mb-2">
-          Access Denied
-        </h1>
-        <p className="text-gray-400 text-sm mb-6">
-          Your account is not registered as an authorized administrator, or has been deactivated.
-        </p>
-
-        <div className="mb-8 p-4 rounded-lg bg-[#111111]/50 border border-gray-800 text-left text-xs text-gray-500">
-          <p>
-            If you believe this is an error, please contact the lead developer or administrator to assign the proper role to your account in the database.
+        <div className="space-y-2">
+          <h1 className="font-serif text-3xl font-bold tracking-wide text-[#C9A86A]">
+            Access Restricted
+          </h1>
+          <p className="text-stone-400 text-sm leading-relaxed">
+            You don&apos;t have permission to access this page.
           </p>
         </div>
 
-        <form action={signOutAction}>
-          <button
-            type="submit"
-            className="w-full rounded-md bg-[#8A7052] px-4 py-3 text-sm font-semibold text-white hover:bg-[#8A7052]/90 focus:outline-none focus:ring-2 focus:ring-[#C9A86A] transition-all cursor-pointer"
-          >
-            Log Out & Try Again
-          </button>
-        </form>
+        <div className="flex flex-col sm:flex-row gap-3 pt-2">
+          <Link href="/" className="flex-1">
+            <Button
+              variant="outline"
+              className="w-full border-stone-800 text-stone-300 hover:bg-stone-900 hover:text-white transition-colors duration-250 cursor-pointer text-xs uppercase font-bold tracking-wider"
+            >
+              Back to Home
+            </Button>
+          </Link>
+          {!user && (
+            <Link href="/login" className="flex-1">
+              <Button
+                variant="accent"
+                className="w-full bg-[#C9A86A] text-[#111111] hover:bg-[#C9A86A]/90 transition-colors duration-250 cursor-pointer text-xs uppercase font-bold tracking-wider"
+              >
+                Login
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

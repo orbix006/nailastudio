@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
+import { SafeImage } from '@/components/ui/SafeImage';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ArrowRight, Sparkles, Paintbrush, Layers, Home, Building2, KeyRound, Eye, Compass, ClipboardCheck } from 'lucide-react';
 import { Service } from '@/lib/supabase/queries';
@@ -31,7 +31,6 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
   CardFooter,
 } from '@/components/ui/Card';
 import { Modal } from '@/components/ui/Modal';
@@ -135,7 +134,7 @@ export function Services({ services }: ServicesProps) {
                 {/* Cover Image */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-stone-100 dark:bg-gray-900 border-b border-stone-200 dark:border-[#C9A86A]/10">
                   {service.cover_image_url ? (
-                    <Image
+                    <SafeImage
                       src={service.cover_image_url}
                       alt={service.title}
                       fill
@@ -202,7 +201,7 @@ export function Services({ services }: ServicesProps) {
               {/* Left Column: Image Gallery Viewer */}
               <div className="flex flex-col space-y-4">
                 <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-[#C9A86A]/10 bg-gray-900 shadow-lg">
-                  <Image
+                  <SafeImage
                     src={activeImageMap[selectedService.id] || selectedService.cover_image_url || ''}
                     alt={`${selectedService.title} presentation`}
                     fill
@@ -232,7 +231,7 @@ export function Services({ services }: ServicesProps) {
                             : 'border-transparent opacity-60 hover:opacity-100'
                         )}
                       >
-                        <Image
+                        <SafeImage
                           src={selectedService.cover_image_url}
                           alt="Cover Thumbnail"
                           fill
@@ -260,7 +259,7 @@ export function Services({ services }: ServicesProps) {
                             : 'border-transparent opacity-60 hover:opacity-100'
                         )}
                       >
-                        <Image src={url} alt={`Gallery Thumbnail ${idx + 1}`} fill sizes="64px" className="object-cover" />
+                        <SafeImage src={url} alt={`Gallery Thumbnail ${idx + 1}`} fill sizes="64px" className="object-cover" />
                       </button>
                     ))}
                   </div>

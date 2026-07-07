@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Phone, MapPin, Clock, Instagram, Facebook, Linkedin, Youtube, MessageCircle } from 'lucide-react';
 
-import { FooterNewsletterForm } from './FooterNewsletterForm';
 
 export interface FooterSocialLink {
   platform: 'instagram' | 'facebook' | 'pinterest' | 'linkedin' | 'whatsapp' | 'youtube';
@@ -51,10 +50,11 @@ export function Footer({
   };
 
   const quickLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/services', label: 'Services' },
-    { href: '/portfolio', label: 'Portfolio' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/#hero', label: 'Home' },
+    { href: '/#services', label: 'Services' },
+    { href: '/#portfolio', label: 'Portfolio' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/#contact', label: 'Contact' },
   ];
 
   return (
@@ -168,18 +168,20 @@ export function Footer({
         </div>
       </div>
 
-      {/* Newsletter Subscribe Row */}
-      <div className="mx-auto max-w-7xl border-t border-stone-200 dark:border-gray-800/40 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="max-w-md space-y-1 text-center md:text-left">
-          <h4 className="font-serif text-sm font-semibold text-stone-900 dark:text-white uppercase tracking-wider">Newsletter Subscription</h4>
-          <p className="text-[10px] text-stone-500 dark:text-gray-500">Subscribe for double opt-in releases containing design guides and styling logs.</p>
-        </div>
-        <FooterNewsletterForm />
-      </div>
-
       {/* Copyright Bar */}
-      <div className="mx-auto max-w-7xl border-t border-stone-200 dark:border-gray-800/60 mt-8 pt-8 text-center text-xs text-stone-500 dark:text-gray-500">
+      <div className="mx-auto max-w-7xl border-t border-stone-200 dark:border-gray-800/60 mt-8 pt-8 text-center text-xs text-stone-500 dark:text-gray-500 space-y-2">
         <p>© {currentYear} {companyName}. All Rights Reserved. Crafted with care.</p>
+        <p className="text-[11px] tracking-wide">
+          Made with 💜 by{' '}
+          <a
+            href="https://orbix.example.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#C9A86A] hover:text-[#8A7052] transition-colors duration-250 font-semibold"
+          >
+            Orbix
+          </a>
+        </p>
       </div>
     </footer>
   );

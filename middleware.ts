@@ -37,6 +37,15 @@ export async function middleware(request: NextRequest) {
 
   // 2. Admin Route Authentication & Active Check
   if (request.nextUrl.pathname.startsWith('/admin')) {
+    const isAccessDeniedPage = request.nextUrl.pathname === '/admin/access-denied';
+    const isLoginPage = request.nextUrl.pathname === '/admin/login';
+
+    if (isLoginPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      return NextResponse.redirect(url);
+    }
+
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -62,40 +71,75 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const isLoginPage = request.nextUrl.pathname === '/admin/login';
-    const isAccessDeniedPage = request.nextUrl.pathname === '/admin/access-denied';
-
-    if (!user && !isLoginPage && !isAccessDeniedPage) {
-      // Redirect unauthenticated user to login
+    if (!user && !isAccessDeniedPage) {
+      // Redirect unauthenticated user to unified login page
       const url = request.nextUrl.clone();
-      url.pathname = '/admin/login';
+      url.pathname = '/login';
       return NextResponse.redirect(url);
     }
 
     if (user) {
-      // Verify that this is an active admin profile
+      // Verify that this is an active admin or superadmin profile
       const { data: profile } = await supabase
         .from('admin_profiles')
-        .select('is_active')
+        .select('is_active, role')
         .eq('id', user.id)
         .maybeSingle();
 
-      const isActiveAdmin = profile?.is_active === true;
+      const isActiveAdmin = profile?.is_active === true && (profile.role === 'admin' || profile.role === 'superadmin');
 
-      if (!isActiveAdmin && !isAccessDeniedPage && !isLoginPage) {
-        // Deactivated or missing profile: Sign out and redirect
-        await supabase.auth.signOut();
+      if (!isActiveAdmin && !isAccessDeniedPage) {
+        // Deactivated or standard account attempting to hit admin paths: Redirect to access-denied without signing out
         const url = request.nextUrl.clone();
         url.pathname = '/admin/access-denied';
         return NextResponse.redirect(url);
       }
+    }
+  }
 
-      if (isActiveAdmin && isLoginPage) {
-        // Active admin trying to hit login: redirect to dashboard
-        const url = request.nextUrl.clone();
-        url.pathname = '/admin';
-        return NextResponse.redirect(url);
+  // 3. Prevent logged-in users from accessing unified Auth Pages (/login and /signup)
+  if (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup') {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+            supabaseResponse = NextResponse.next({
+              request,
+            });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            );
+          },
+        },
       }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from('admin_profiles')
+        .select('is_active, role')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      const isActiveAdmin = profile?.is_active === true && (profile.role === 'admin' || profile.role === 'superadmin');
+
+      const url = request.nextUrl.clone();
+      if (isActiveAdmin) {
+        url.pathname = '/admin';
+      } else {
+        url.pathname = '/';
+      }
+      return NextResponse.redirect(url);
     }
   }
 
